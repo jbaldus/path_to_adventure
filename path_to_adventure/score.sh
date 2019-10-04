@@ -7,7 +7,7 @@ function score_cave() {
         if [ ! -d ./cottage/leave_home/forest/cave ]; then
             echo "CAVE Points: 2"
             CAVE_POINTS=2
-            TOTAL = $((TOTAL+CAVE_POINTS))
+            TOTAL=$((TOTAL+CAVE_POINTS))
         else
             echo "CAVE: Unfinished"
         fi
@@ -50,7 +50,7 @@ function score_desert() {
 }
 
 function score_ruins() {
-    if [ -e ./cottage/treasure_chest/.treasure_ruins ] && [ ! $(ls ./cottage/leave_home/desert/ruins/*skeleton*) ]; then
+    if [ -e ./cottage/treasure_chest/.treasure_ruins ] && [ ! $(ls ./cottage/leave_home/desert/ruins/*skeleton* 2>/dev/null) ]; then
         echo "RUINS Points: 3"
         RUINS_POINTS=3
         TOTAL=$((TOTAL+RUINS_POINTS))
@@ -88,6 +88,7 @@ function score_library() {
 }
 
 function score_cottage() {
+    COTTAGE_SCORE=0
     if [ -d ./cottage/treasure_chest ]; then
         echo "Treasure Chest Created: 1 Point"
         COTTAGE_SCORE=1
@@ -99,6 +100,7 @@ function score_cottage() {
     if [ $COTTAGE_SCORE -lt 2 ]; then
 	echo "COTTAGE: Unfinished"
     fi
+    TOTAL=$((TOTAL+COTTAGE_SCORE))
 }
 echo "This program will tell you how you have done."
 echo "============================================="
