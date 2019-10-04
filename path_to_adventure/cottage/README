@@ -1,0 +1,16 @@
+This is your home. You live here. It is a thatched-roof cottage in a 
+magical land of mystery and adventure. You hear the call of adventure 
+calling you. Get ready for your adventure.
+
+> To start, CREATE A TEXT FILE here called "name.txt" with your name in it. 
+  Bonus points if you can do it without using a text editor like nano.
+
+> During your adventures, you will encounter treasure. Find all the treasure and 
+  bring it back here. You'll need somewhere to put your treasure, though, so 
+  CREATE A DIRECTORY named "treasure_chest" right here in your cottage.
+
+> Now explore the path that lies before you. Use the commands "cd", "ls", and "pwd"
+  among others to navigate this world of adventure. Start by leaving home by typing
+  "cd leave_home" at the prompt. 
+  
+> Each time you enter a new location, check to see if there is a README with "cat README"
