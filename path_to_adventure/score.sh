@@ -2,151 +2,192 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 COTTAGE=$DIR/cottage
+CHEST=$COTTAGE/treasure_chest
 OUTSIDE=$COTTAGE/outside
 FOREST=$OUTSIDE/forest
+GLEN=$FOREST/.hidden_glen
+CAVE=$FOREST/cave
 DESERT=$OUTSIDE/desert
 CASTLE=$OUTSIDE/castle
 LIBRARY=$CASTLE/library
 CATACOMBS=$LIBRARY/catacombs
 RUINS=$DESERT/ruins
 
+declare -A ITEMS
+ITEMS=(
+    [cottage_chest]=0
+    [cottage_name]=0
+    [cave]=0
+    [castle]=0
+    [library]=0
+    [desert]=0
+    [ruins]=0
+    [forest]=0
+    [glen]=0
+    [bear_in_chest]=0
+)
+
+GAME_OVER=0
+BEAR_IN_CHEST=0
+WRONG_WATERINGHOLE=0
+TOTAL=0
 
 function score_cave() {
-    if [ -f $DIR/cottage/treasure_chest/treasure_cave ] &&
-       [ ! -d $DIR/cottage/outside/forest/cave ]; then
-        CAVE_POINTS=2
-        echo "CAVE Points: 2"
-        TOTAL=$((TOTAL+CAVE_POINTS))
-    else
-        echo "CAVE: Unfinished"
+    if [ -f $CHEST/treasure_cave ] &&
+       [ ! -d $CAVE ]; then
+        ITEMS[cave]=2
     fi
 }
 
 function score_castle() {
-    LIBRARY=$DIR/cottage/outside/castle/library
     if [ -r $LIBRARY ] && 
        [ -w $LIBRARY ] && 
        [ -x $LIBRARY ]; then
-        CASTLE_POINTS=3
-        echo "CASTLE Points: 3"
-        TOTAL=$((TOTAL+CASTLE_POINTS))
-    else
-        echo "CASTLE: Unfinished"
+       ITEMS[castle]=3
     fi
 }
 
 function score_desert() {
-    pushd $DESERT >/dev/null
-    if [ wateringhole_5 -nt wateringhole_2 ] &&
-       [ wateringhole_2 -nt wateringhole_1 ] &&
-       [ wateringhole_1 -nt wateringhole_4 ] &&
-       [ wateringhole_4 -nt wateringhole_3 ] &&
-       [ wateringhole_3 -nt wateringhole_7 ] &&
-       [ wateringhole_7 -nt wateringhole_8 ] &&
-       [ wateringhole_8 -nt wateringhole_6 ] &&
-       [ wateringhole_6 -nt wateringhole_0 ] &&
-       [ wateringhole_0 -nt wateringhole_9 ]; then
-        DESERT_POINTS=4
-        echo "DESERT Points: 4"
-        TOTAL=$((TOTAL+DESERT_POINTS))
-    else
-        echo "DESERT: Unfinished"
-    fi
-    popd > /dev/null
+    local wateringhole_dates=( "19 May 2001" 
+                               "26 Sep 2019" 
+                               "02 Oct 2019"                              
+                               "12 Mar 2015" 
+                               "17 Jul 2017" 
+                               "13 May 1987" 
+                               "22 Nov 2001" 
+                               "11 Apr 2008" 
+                               "03 Apr 2005" 
+                               "27 Sep 1995" )
+    local failed=0
+    for i in {0..4} {6..9}; do
+        local date=$(date -r $DESERT/wateringhole_$i "+%d %h %Y")
+        if [ "$date" != "${wateringhole_dates[$i]}" ]; then
+          #Break the loop and set game over variable
+          WRONG_WATERINGHOLE=1
+          break
+        fi
+    done
+    if [ $WRONG_WATERINGHOLE -eq 0 ]; then
+        if [ "$(date -r wateringhole_5 '+%d %h %Y')" == "$(date '+%d %h %Y')" ]; then
+            ITEMS[desert]=4
+        fi
+    fi    
 }
 
 function score_ruins() {
-    if [ -e $DIR/cottage/treasure_chest/.treasure_ruins ] && 
-       [ ! $(ls $DIR/cottage/outside/desert/ruins/*skeleton* 2>/dev/null) ]; then
-        RUINS_POINTS=3
-        echo "RUINS Points: 3"
-        TOTAL=$((TOTAL+RUINS_POINTS))
-    else
-        echo "RUINS: Unfinished"
+    if [ -e $CHEST/.treasure_ruins ] && 
+       [ ! "$(ls $RUINS/*skeleton* 2>/dev/null)" ]; then
+        ITEMS[ruins]=3
     fi
 }
 
 function score_forest() {
-    if [ -e $DIR/cottage/outside/forest/odin ]; then
-        FOREST_POINTS=4
-        echo "FOREST BONUS! 4 Points"
-        TOTAL=$((TOTAL+FOREST_POINTS))
+    if [ -e $FOREST/odin ]; then
+        ITEMS[forest]=4
     fi
 }
 
 function score_glen() {
-    if [ -e $DIR/cottage/outside/forest/.hidden_glen/elkimer ] && 
-       [ -e $DIR/cottage/treasure_chest/.treasure_glen ]; then
-        GLEN_POINTS=8
-        echo "HIDDEN GLEN Points: 8"
-        TOTAL=$((TOTAL+GLEN_POINTS))
-    else
-        echo "....Hmmm....Did you search everywhere?"
+    if [ -e $GLEN/elkimer ] && 
+       [ -e $CHEST/.treasure_glen ]; then
+        ITEMS[glen]=8
     fi
 }
 
 function score_library() {
-    if [ -e $DIR/cottage/treasure_chest/treasure_373 ]; then
-        LIBRARY_POINTS=6
-        echo "LIBRARY Points: 6"
-        TOTAL=$((TOTAL+LIBRARY_POINTS))
-    else
-        echo "LIBRARY: Unfinished"
+    local answer=$(grep Mimir $LIBRARY/*txt* | wc -l)
+    if [ -e "$CHEST/treasure_${answer}" ]; then
+        ITEMS[library]=6
     fi
 }
 
 function score_cottage() {
-    COTTAGE_SCORE=0
-    if [ -d $DIR/cottage/treasure_chest ]; then
-        COTTAGE_SCORE=$((COTTAGE_SCORE+1))
-        echo "Treasure Chest Created: 1 Point"
+    if [ -d $CHEST ]; then
+        ITEMS[cottage_chest]=1
     fi
-    if [ -e $DIR/cottage/name.txt ]; then
-        echo "Name file created: 1 Point"
-        COTTAGE_SCORE=$((COTTAGE_SCORE+1))
+    if [ -e $COTTAGE/name.txt ]; then
+        ITEMS[cottage_name]=1
     fi
-    if [ $COTTAGE_SCORE -lt 2 ]; then
-	echo "COTTAGE: Unfinished"
-    fi
-    TOTAL=$((TOTAL+COTTAGE_SCORE))
 }
 
 function bear_in_treasure_chest() {
-    if [ -e $DIR/cottage/treasure_chest/bear ]; then
-        echo "You've put a bear in your treasure chest!"
-        echo "It eats all your points: -$TOTAL Points!"
-        TOTAL=0
-    fi
-}
-
-function score_bonus() {
-    if [ -e $FOREST/odin ]; then
-        echo "You guessed the name of the old man! Way to know your mythology!"
-        echo "You have gained 5 bonus points"
-        TOTAL=$((TOTAL+5))
+    if [ -e $CHEST/bear ]; then
+        BEAR_IN_CHEST=1
+        GAME_OVER=1
     fi
 }
 
 function score_all() {
+    score_castle
+    score_cave
+    score_cottage
+    score_desert
+    score_forest
+    score_glen
+    score_library
+    score_ruins
+    bear_in_treasure_chest
+}
+
+function print_bear_in_chest() {
+    echo ""
+    echo "\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/"
+    echo "You've put a bear in your treasure chest!"
+    echo "It eats all your points: -$TOTAL Points!"
+    echo "And then it eats you! GAME OVER"
+    echo "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\"
+}
+
+function print_wrong_wateringhole() {
+    echo ""
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo "You wasted preciouse time touching watering holes that"
+    echo "only SEEMED to be there. You died of thirst, and the husk"
+    echo "of your body was devoured by the desert."
+    echo "GAME OVER!"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+}
+
+function calculate_total() {
     TOTAL=0
+    for p in "${ITEMS[@]}"; do
+        TOTAL=$((TOTAL + p))
+    done
+}
+
+function print_score() {
+    score_all
     echo "This program will tell you how you have done."
     echo "============================================="
     echo "How did you do for the first steps?"
-    score_cottage
+    [ ${ITEMS[cottage_chest]} -ne 0 ] && echo "Treasure Chest Created: ${ITEMS[cottage_chest]} Point"
+    [ ${ITEMS[cottage_name]} -ne 0 ] && echo "Name file created: ${ITEMS[cottage_name]} Point"
+    [ ${ITEMS[cottage_chest]} -ne 0 ] && [ ${ITEMS[cottage_name]} -ne 0 ] || echo "COTTAGE: Unfinished"
     echo ""
     echo "Now, how about the rest?"
     echo "========================"
-    score_forest
-    score_castle
-    score_cave
-    score_desert
-    score_ruins
-    score_library
-    score_glen
-    score_bonus
-    bear_in_treasure_chest
-    echo "==================="
-    echo "TOTAL SCORE: $TOTAL"
+    [ ${ITEMS[castle]} -ne 0 ] && echo "CASTLE: ${ITEMS[castle]} Points" || echo "CASTLE: Unfinished"
+    [ ${ITEMS[library]} -ne 0 ] && echo "LIBRARY: ${ITEMS[library]} Points" || echo "LIBRARY: Unfinished"
+    [ ${ITEMS[desert]} -ne 0 ] && echo "DESERT: ${ITEMS[desert]} Points" || echo "DESERT: Unfinished"
+    [ ${ITEMS[ruins]} -ne 0 ] && echo "RUINS: ${ITEMS[ruins]} Points" || echo "RUINS: Unfinished"
+    [ ${ITEMS[forest]} -ne 0 ] && echo "FOREST Bonus!: ${ITEMS[forest]} Points"
+    [ ${ITEMS[cave]} -ne 0 ] && echo "CAVE: ${ITEMS[cave]} Points" || echo "CAVE: Unfinished"
+    [ ${ITEMS[glen]} -ne 0 ] && echo "HIDDEN GLEN: ${ITEMS[glen]} Points" || echo "....Hmmm....Did you search everywhere?"
+    if [ $GAME_OVER -eq 0 ]; then 
+        calculate_total
+        echo "==================="
+        echo "TOTAL SCORE: $TOTAL"
+    else
+        if [ $BEAR_IN_CHEST -ne 0 ]; then  
+            calculate_total
+            print_bear_in_chest
+            exit
+        elif [ $WRONG_WATERINGHOLE -ne 0 ]; then
+            calculate_total
+            print_wrong_wateringhole
+            exit
+        fi
+    fi
 }
 
-score_all
+print_score
