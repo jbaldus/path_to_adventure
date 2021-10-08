@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bash --init-file .welcome.sh -i
