@@ -60,15 +60,16 @@ function score_desert() {
                                "27 Sep 1995" )
     local failed=0
     for i in {0..4} {6..9}; do
-        local date=$(date -r $DESERT/wateringhole_$i "+%d %h %Y")
+        local date=$(date -r $DESERT/wateringhole_$i "+%d %h %Y" 2>/dev/null)
         if [ "$date" != "${wateringhole_dates[$i]}" ]; then
           #Break the loop and set game over variable
           WRONG_WATERINGHOLE=1
+          GAME_OVER=1
           break
         fi
     done
     if [ $WRONG_WATERINGHOLE -eq 0 ]; then
-        if [ "$(date -r wateringhole_5 '+%d %h %Y')" == "$(date '+%d %h %Y')" ]; then
+        if [ "$(date -r $DESERT/wateringhole_5 '+%d %h %Y' 2>/dev/null)" == "$(date '+%d %h %Y')" ]; then
             ITEMS[desert]=4
         fi
     fi    
@@ -95,9 +96,11 @@ function score_glen() {
 }
 
 function score_library() {
-    local answer=$(grep Mimir $LIBRARY/*txt* | wc -l)
-    if [ -e "$CHEST/treasure_${answer}" ]; then
-        ITEMS[library]=6
+    if [ ${ITEMS[castle]} -ne 0 ]; then 
+        local answer=$(grep Mimir $LIBRARY/*txt* | wc -l)
+        if [ -e "$CHEST/treasure_${answer}" ]; then
+            ITEMS[library]=6
+        fi
     fi
 }
 
@@ -148,6 +151,16 @@ function print_wrong_wateringhole() {
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 
+function print_you_win() {
+    cat << EOF
+
+                          🎊 YOU WIN!!! 🎊
+
+You are the greatest terminal jockey in all the land! Congratulations!
+
+EOF
+}
+
 function calculate_total() {
     TOTAL=0
     for p in "${ITEMS[@]}"; do
@@ -157,6 +170,7 @@ function calculate_total() {
 
 function print_score() {
     score_all
+    echo ""
     echo "This program will tell you how you have done."
     echo "============================================="
     echo "How did you do for the first steps?"
@@ -177,6 +191,11 @@ function print_score() {
         calculate_total
         echo "==================="
         echo "TOTAL SCORE: $TOTAL"
+        echo ""
+        if [ $TOTAL -ge 32 ]; then
+            print_you_win
+            exit
+        fi
     else
         if [ $BEAR_IN_CHEST -ne 0 ]; then  
             calculate_total
