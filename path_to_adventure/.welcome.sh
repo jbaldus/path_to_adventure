@@ -72,7 +72,7 @@ cat << EOF
 
 This is a list of commands that will be useful on your adventure:
 
-${BOLD}ls${RESET}, ${BOLD}cd${RESET}, ${BOLD}pwd${RESET}, ${BOLD}rm${RESET}, ${BOLD}rmdir${RESET}, ${BOLD}mv${RESET}, ${BOLD}grep${RESET}, ${BOLD}wc${RESET}, ${BOLD}chmod${RESET}, ${BOLD}touch${RESET}, ${BOLD}mkdir${RESET}, ${BOLD}man${RESET}, ${BOLD}echo${RESET}, ${BOLD}vim${RESET}
+${BOLD}ls${RESET}, ${BOLD}cat${RESET}, ${BOLD}cd${RESET}, ${BOLD}pwd${RESET}, ${BOLD}rm${RESET}, ${BOLD}rmdir${RESET}, ${BOLD}mv${RESET}, ${BOLD}grep${RESET}, ${BOLD}wc${RESET}, ${BOLD}chmod${RESET}, ${BOLD}touch${RESET}, ${BOLD}mkdir${RESET}, ${BOLD}man${RESET}, ${BOLD}echo${RESET}, ${BOLD}vim${RESET}
 
 If you really need extra help, you can type ${BOLD}omg-help${RESET} to get a 
 quick description of each of these commands.
@@ -94,6 +94,7 @@ You will also want to use the common flags you learned for some of these
 commands:
 
 ${BOLD}ls${RESET}    -> list the files in the current directory
+${BOLD}cat${RESET}   -> print the contents of a file to the terminal
 ${BOLD}cd${RESET}    -> change to a different directory
 ${BOLD}pwd${RESET}   -> print what directory you're in
 ${BOLD}rm${RESET}    -> delete a file
