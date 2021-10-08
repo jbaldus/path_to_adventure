@@ -11,8 +11,8 @@ export RESET=$'\e[0m'
 
 export HARDMODE=0
 
-export NORMALMODE_PROMPT="$PS1 [P2A] \\$ "
-export HARDMODE_PROMPT="[P2A] \\$ "
+export NORMALMODE_PROMPT='\[\e[01;32m\]\u@\h\[\e[0m\]:\[\e[01;34m\]\w\[\e[0m\] [P2A] \[\e[01;33m\]\$\[\e[0m\] '
+export HARDMODE_PROMPT='[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 
@@ -31,6 +31,12 @@ you have learned to get around in the Linux terminal.  You will need to
 move to new directories, show the content of files on the terminal, and
 muck about with file permissions. And much, much more!
 
+EOF
+
+set_mode
+
+cat << EOF
+
 It's dangerous to go alone, so let me give you some important advice:
 
 > Nearly every place you go will have a README file. You should read it.
@@ -38,18 +44,19 @@ It's dangerous to go alone, so let me give you some important advice:
 > Remember that ${BOLD}man${RESET} is a command that will show you how other commands 
   work. Use it like ${BOLD}man mv${RESET} to see what the ${BOLD}mv${RESET} command can do.
 
+EOF
+if [ $HARDMODE -eq 0 ]; then
+cat << EOF
 > If you really get stuck, you can type ${BOLD}help${RESET} to get a list of only the 
   commands that you will need for this adventure. Use ${BOLD}man${RESET} for more info
   on each specific command.
 
-> At any point you can type ${BOLD}score${RESET} to get a rundown of your score. If you
-  get 32 points, you win!
-
 EOF
-
-set_mode
+fi
 
 cat << EOF
+> At any point you can type ${BOLD}score${RESET} to get a rundown of your score. If you
+  get 32 points, you win!
 
 Like all the best role-playing games, you will begin your journey in a
 humble cottage. Let's take you there now:
@@ -60,23 +67,26 @@ EOF
 }
 
 function help() {
+  if [ $HARDMODE -eq 0 ]; then 
 cat << EOF
 
 This is a list of commands that will be useful on your adventure:
 
-${BOLD}ls${RESET}, ${BOLD}cd${RESET}, ${BOLD}pwd${RESET}, ${BOLD}rm${RESET}, ${BOLD}rmdir${RESET}, ${BOLD}mv${RESET}, ${BOLD}grep${RESET}, ${BOLD}wc${RESET}, ${BOLD}chmod${RESET}, ${BOLD}touch${RESET}, ${BOLD}echo${RESET}, ${BOLD}vim${RESET}
+${BOLD}ls${RESET}, ${BOLD}cd${RESET}, ${BOLD}pwd${RESET}, ${BOLD}rm${RESET}, ${BOLD}rmdir${RESET}, ${BOLD}mv${RESET}, ${BOLD}grep${RESET}, ${BOLD}wc${RESET}, ${BOLD}chmod${RESET}, ${BOLD}touch${RESET}, ${BOLD}mkdir${RESET}, ${BOLD}echo${RESET}, ${BOLD}vim${RESET}
 
 If you really need extra help, you can type ${BOLD}omg-help${RESET} to get a 
 quick description of each of these commands.
 
 EOF
-
-if [ $HARDMODE -eq 1 ]; then
+else
+    echo ""
     echo "It seems like you are in HARD MODE, you can go back to easy mode with ${BOLD}wah-wah${RESET}."
+    echo ""
 fi
 }
 
 function omg-help() {
+  if [ $HARDMODE -eq 0 ]; then
 cat << EOF
 
 These are the commands that might be helpful for you on this adventure. 
@@ -94,11 +104,16 @@ ${BOLD}wc${RESET}    -> counts the words in its input
 ${BOLD}chmod${RESET} -> changes the permissions on files and directories
 ${BOLD}touch${RESET} -> updates the last time of modification on a file ALSO will 
          create the file if it didn't exist
+${BOLD}mkdir${RESET} -> create a directory
 ${BOLD}echo${RESET}  -> prints its argument to the terminal. Userful with file redirection
 ${BOLD}vim${RESET}   -> text editor for pros. We know ${BOLD}i${RESET}, ${BOLD}<ESC>${RESET}, and ${BOLD}:wq${RESET} - just the basics.
 
 EOF
-
+else
+    echo ""
+    echo "It seems like you are in HARD MODE, you can go back to easy mode with ${BOLD}wah-wah${RESET}."
+    echo ""
+fi
 }
 
 function set_mode() {
@@ -133,6 +148,11 @@ function wah-wah() {
 Couldn't handle it, eh? That's okay. Get some more practice with the prompt
 there to help you out, and then come back and try hard mode again!
 
+If you really get stuck, you can type ${BOLD}help${RESET} to get a list of only the 
+commands that you will need for this adventure. Use ${BOLD}man${RESET} for more info
+on each specific command.
+
+If you want to re-enable hard mode, just type ${BOLD}hardmode${RESET}.
 EOF
 }
 
