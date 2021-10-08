@@ -1,8 +1,15 @@
 #!/usr/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+COTTAGE=$DIR/cottage
+OUTSIDE=$COTTAGE/outside
+FOREST=$OUTSIDE/forest
+DESERT=$OUTSIDE/desert
+CASTLE=$OUTSIDE/castle
+LIBRARY=$CASTLE/library
+CATACOMBS=$LIBRARY/catacombs
+RUINS=$DESERT/ruins
 
-TOTAL=0
 
 function score_cave() {
     if [ -f $DIR/cottage/treasure_chest/treasure_cave ] &&
@@ -29,7 +36,6 @@ function score_castle() {
 }
 
 function score_desert() {
-    DESERT=$DIR/cottage/outside/desert
     pushd $DESERT >/dev/null
     if [ wateringhole_5 -nt wateringhole_2 ] &&
        [ wateringhole_2 -nt wateringhole_1 ] &&
@@ -113,20 +119,34 @@ function bear_in_treasure_chest() {
     fi
 }
 
-echo "This program will tell you how you have done."
-echo "============================================="
-echo "How did you do for the first steps?"
-score_cottage
-echo ""
-echo "Now, how about the rest?"
-echo "========================"
-score_forest
-score_castle
-score_cave
-score_desert
-score_ruins
-score_library
-score_glen
-bear_in_treasure_chest
-echo "==================="
-echo "TOTAL SCORE: $TOTAL"
+function score_bonus() {
+    if [ -e $FOREST/odin ]; then
+        echo "You guessed the name of the old man! Way to know your mythology!"
+        echo "You have gained 5 bonus points"
+        TOTAL=$((TOTAL+5))
+    fi
+}
+
+function score_all() {
+    TOTAL=0
+    echo "This program will tell you how you have done."
+    echo "============================================="
+    echo "How did you do for the first steps?"
+    score_cottage
+    echo ""
+    echo "Now, how about the rest?"
+    echo "========================"
+    score_forest
+    score_castle
+    score_cave
+    score_desert
+    score_ruins
+    score_library
+    score_glen
+    score_bonus
+    bear_in_treasure_chest
+    echo "==================="
+    echo "TOTAL SCORE: $TOTAL"
+}
+
+score_all
