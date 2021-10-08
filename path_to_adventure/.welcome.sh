@@ -72,7 +72,7 @@ cat << EOF
 
 This is a list of commands that will be useful on your adventure:
 
-${BOLD}ls${RESET}, ${BOLD}cd${RESET}, ${BOLD}pwd${RESET}, ${BOLD}rm${RESET}, ${BOLD}rmdir${RESET}, ${BOLD}mv${RESET}, ${BOLD}grep${RESET}, ${BOLD}wc${RESET}, ${BOLD}chmod${RESET}, ${BOLD}touch${RESET}, ${BOLD}mkdir${RESET}, ${BOLD}echo${RESET}, ${BOLD}vim${RESET}
+${BOLD}ls${RESET}, ${BOLD}cd${RESET}, ${BOLD}pwd${RESET}, ${BOLD}rm${RESET}, ${BOLD}rmdir${RESET}, ${BOLD}mv${RESET}, ${BOLD}grep${RESET}, ${BOLD}wc${RESET}, ${BOLD}chmod${RESET}, ${BOLD}touch${RESET}, ${BOLD}mkdir${RESET}, ${BOLD}man${RESET}, ${BOLD}echo${RESET}, ${BOLD}vim${RESET}
 
 If you really need extra help, you can type ${BOLD}omg-help${RESET} to get a 
 quick description of each of these commands.
@@ -105,6 +105,7 @@ ${BOLD}chmod${RESET} -> changes the permissions on files and directories
 ${BOLD}touch${RESET} -> updates the last time of modification on a file ALSO will 
          create the file if it didn't exist
 ${BOLD}mkdir${RESET} -> create a directory
+${BOLD}man${RESET}   -> show the man page (manual) for a command
 ${BOLD}echo${RESET}  -> prints its argument to the terminal. Userful with file redirection
 ${BOLD}vim${RESET}   -> text editor for pros. We know ${BOLD}i${RESET}, ${BOLD}<ESC>${RESET}, and ${BOLD}:wq${RESET} - just the basics.
 
