@@ -11,17 +11,6 @@ LIBRARY=$CASTLE/library
 CATACOMBS=$LIBRARY/catacombs
 RUINS=$DESERT/ruins
 
-# -rwxrwxrwx. 1 jason jason    0 May 19  2001 wateringhole_0
-# -rwxrwxrwx. 1 jason jason    0 Sep 26  2019 wateringhole_1
-# -rwxrwxrwx. 1 jason jason    0 Oct  2  2019 wateringhole_2
-# -rwxrwxrwx. 1 jason jason    0 Mar 12  2015 wateringhole_3
-# -rwxrwxrwx. 1 jason jason    0 Jul 17  2017 wateringhole_4
-# -rwxrwxrwx. 1 jason jason    0 May 13  1987 wateringhole_5
-# -rwxrwxrwx. 1 jason jason    0 Nov 22  2001 wateringhole_6
-# -rwxrwxrwx. 1 jason jason    0 Apr 11  2008 wateringhole_7
-# -rwxrwxrwx. 1 jason jason    0 Apr  3  2005 wateringhole_8
-# -rwxrwxrwx. 1 jason jason    0 Sep 27  1995 wateringhole_9
-
 function setup_wateringholes() {
   rm $DESERT/wateringhole_*
   local wateringhole_dates=( "19 May 2001" 
