@@ -3,8 +3,10 @@ all:
 	mkdir -p ./build ; \
 	chmod 055 ./path_to_adventure/cottage/outside/castle/library ; \
 	sudo -E tar -cpf build/adv.tar ./path_to_adventure/* ; \
+	sudo -E tar -rf build/adv.tar ./path_to_adventure/.welcome.sh ; \
 	sudo -E chown ${USER}:${USER} build/adv.tar ; \
 	chmod 755 ./path_to_adventure/cottage/outside/castle/library
 
 clean:
-	rm adv.tar
+	rm build/adv.tar
+	sudo rm -rf build/*
