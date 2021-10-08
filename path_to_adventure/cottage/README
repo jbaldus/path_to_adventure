@@ -11,6 +11,6 @@ calling you. Get ready for your adventure.
 
 > Now explore the path that lies before you. Use the commands "cd", "ls", and "pwd"
   among others to navigate this world of adventure. Start by leaving home by typing
-  "cd leave_home" at the prompt. 
+  "cd outside" at the prompt. 
   
 > Each time you enter a new location, check to see if there is a README with "cat README"
