@@ -138,6 +138,8 @@ function print_bear_in_chest() {
     echo "You've put a bear in your treasure chest!"
     echo "It eats all your points: -$TOTAL Points!"
     echo "And then it eats you! GAME OVER"
+    echo ""
+    echo "Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}"
     echo "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\"
 }
 
@@ -148,6 +150,8 @@ function print_wrong_wateringhole() {
     echo "only SEEMED to be there. You died of thirst, and the husk"
     echo "of your body was devoured by the desert."
     echo "GAME OVER!"
+    echo ""
+    echo "Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}"
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 }
 
@@ -157,6 +161,8 @@ function print_you_win() {
                           🎊 YOU WIN!!! 🎊
 
 You are the greatest terminal jockey in all the land! Congratulations!
+
+Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}
 
 EOF
 }
