@@ -9,6 +9,13 @@ export PATH=$DIR:$PATH
 export BOLD=$'\e[1;31m'
 export RESET=$'\e[0m'
 
+export HARDMODE=0
+
+export NORMALMODE_PROMPT="$PS1 [P2A] \\$ "
+export HARDMODE_PROMPT="[P2A] \\$ "
+
+export PS1=$NORMALMODE_PROMPT
+
 
 function welcome_message() {
 cat << EOF
@@ -100,15 +107,14 @@ function set_mode() {
     echo "Do you want to try this in HARD MODE?"
     select yn in "Yes" "No"; do
         case $yn in
-            Yes ) set_hard_mode; break;;
+            Yes ) hardmode; break;;
             No ) break;;
         esac
     done
 }
 
-function set_hard_mode() {
-    export PREVIOUS_PS1=$PS1
-    export PS1="\\$ "
+function hardmode() {
+    export PS1=$HARDMODE_PROMPT
     export HARDMODE=1
     cat << EOF
 
@@ -120,7 +126,7 @@ EOF
 }
 
 function wah-wah() {
-    export PS1=$PREVIOUS_PS1
+    export PS1=$NORMALMODE_PROMPT
     export HARDMODE=0
     cat << EOF
 
