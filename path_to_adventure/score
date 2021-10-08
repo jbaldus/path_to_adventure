@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+
+BOLD=$'\e[1;31m'
+RESET=$'\e[0m'
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 COTTAGE=$DIR/cottage
 CHEST=$COTTAGE/treasure_chest
@@ -133,26 +137,33 @@ function score_all() {
 }
 
 function print_bear_in_chest() {
-    echo ""
-    echo "\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/"
-    echo "You've put a bear in your treasure chest!"
-    echo "It eats all your points: -$TOTAL Points!"
-    echo "And then it eats you! GAME OVER"
-    echo ""
-    echo "Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}"
-    echo "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\"
+    cat << EOF
+
+\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/
+You've put a bear in your treasure chest!
+It eats all your points: -$TOTAL Points!
+And then it eats you!
+
+                        ${BOLD}GAME OVER${RESET}
+
+Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}
+/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\
+EOF
 }
 
 function print_wrong_wateringhole() {
-    echo ""
-    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    echo "You wasted preciouse time touching watering holes that"
-    echo "only SEEMED to be there. You died of thirst, and the husk"
-    echo "of your body was devoured by the desert."
-    echo "GAME OVER!"
-    echo ""
-    echo "Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}"
-    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    cat << EOF
+    
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You wasted preciouse time touching watering holes that
+only SEEMED to be there. You died of thirst, and the husk
+of your body was devoured by the desert.
+
+                        ${BOLD}GAME OVER${RESET}
+
+Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+EOF
 }
 
 function print_you_win() {
@@ -186,13 +197,13 @@ function print_score() {
     echo ""
     echo "Now, how about the rest?"
     echo "========================"
-    [ ${ITEMS[castle]} -ne 0 ] && echo "CASTLE: ${ITEMS[castle]} Points" || echo "CASTLE: Unfinished"
+    [ ${ITEMS[castle]} -ne 0 ] && echo " CASTLE: ${ITEMS[castle]} Points" || echo " CASTLE: Unfinished"
     [ ${ITEMS[library]} -ne 0 ] && echo "LIBRARY: ${ITEMS[library]} Points" || echo "LIBRARY: Unfinished"
-    [ ${ITEMS[desert]} -ne 0 ] && echo "DESERT: ${ITEMS[desert]} Points" || echo "DESERT: Unfinished"
-    [ ${ITEMS[ruins]} -ne 0 ] && echo "RUINS: ${ITEMS[ruins]} Points" || echo "RUINS: Unfinished"
-    [ ${ITEMS[forest]} -ne 0 ] && echo "FOREST Bonus!: ${ITEMS[forest]} Points"
-    [ ${ITEMS[cave]} -ne 0 ] && echo "CAVE: ${ITEMS[cave]} Points" || echo "CAVE: Unfinished"
-    [ ${ITEMS[glen]} -ne 0 ] && echo "HIDDEN GLEN: ${ITEMS[glen]} Points" || echo "....Hmmm....Did you search everywhere?"
+    [ ${ITEMS[desert]} -ne 0 ] && echo " DESERT: ${ITEMS[desert]} Points" || echo " DESERT: Unfinished"
+    [ ${ITEMS[ruins]} -ne 0 ] && echo "  RUINS: ${ITEMS[ruins]} Points" || echo "  RUINS: Unfinished"
+    [ ${ITEMS[forest]} -ne 0 ] && echo " FOREST Bonus!: ${ITEMS[forest]} Points"
+    [ ${ITEMS[cave]} -ne 0 ] && echo "   CAVE: ${ITEMS[cave]} Points" || echo "   CAVE: Unfinished"
+    [ ${ITEMS[glen]} -ne 0 ] && echo "HIDDEN GLEN: ${ITEMS[glen]} Points" || echo "...Hmmm...Did you search everywhere?"
     if [ $GAME_OVER -eq 0 ]; then 
         calculate_total
         echo "==================="
