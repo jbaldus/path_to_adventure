@@ -8,5 +8,11 @@ all:
 	chmod 755 ./path_to_adventure/cottage/outside/castle/library
 
 clean:
-	rm build/adv.tar
+	@echo Cleaning build directory ; \
 	sudo rm -rf build/*
+
+test: clean all
+	cd build ; \
+	tar -xf adv.tar ; \
+	cd path_to_adventure ; \
+	./start
