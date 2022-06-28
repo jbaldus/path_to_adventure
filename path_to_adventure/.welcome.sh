@@ -16,6 +16,8 @@ export HARDMODE_PROMPT='[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 
+export PROMPT_COMMAND='[ $HARDMODE -eq 0 ] && [ `history 1 | cut -d" " -f4 | head -n1` == cd ] && [ -e ./README ] && cat README'
+
 
 function welcome_message() {
 cat << EOF
