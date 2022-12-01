@@ -19,7 +19,7 @@ export PS1=$NORMALMODE_PROMPT
 export PROMPT_COMMAND='[ $HARDMODE -eq 0 ] && [ `history 1 | cut -d" " -f4 | head -n1` == cd ] && [ -e ./README ] && cat README'
 
 
-function welcome_message() {
+function welcome_message {
 cat << EOF
 #####################################
 ##                                 ##
@@ -68,7 +68,7 @@ Type ${BOLD}cd cottage${RESET} and then press ${BOLD}[Enter]${RESET}
 EOF
 }
 
-function help() {
+function help {
   if [ $HARDMODE -eq 0 ]; then 
 cat << EOF
 
@@ -87,7 +87,7 @@ else
 fi
 }
 
-function omg-help() {
+function omg-help {
   if [ $HARDMODE -eq 0 ]; then
 cat << EOF
 
@@ -120,7 +120,7 @@ else
 fi
 }
 
-function set_mode() {
+function set_mode {
     echo ""
     echo "Are you up for a challenge?"
     echo "Do you want to try this in HARD MODE?"
@@ -132,7 +132,7 @@ function set_mode() {
     done
 }
 
-function hardmode() {
+function hardmode {
     export PS1=$HARDMODE_PROMPT
     export HARDMODE=1
     cat << EOF
@@ -144,7 +144,7 @@ you your old prompt back. Good Luck!
 EOF
 }
 
-function wah-wah() {
+function wah-wah {
     export PS1=$NORMALMODE_PROMPT
     export HARDMODE=0
     cat << EOF

@@ -11,7 +11,7 @@ LIBRARY=$CASTLE/library
 CATACOMBS=$LIBRARY/catacombs
 RUINS=$DESERT/ruins
 
-function setup_wateringholes() {
+function setup_wateringholes{
   rm $DESERT/wateringhole_*
   local wateringhole_dates=( "19 May 2001" 
                              "26 Sep 2019" 
@@ -29,7 +29,7 @@ function setup_wateringholes() {
   done
 }
 
-function setup_catacombs () {
+function setup_catacombs {
     chmod u+rwx $LIBRARY
     rm -rf $CATACOMBS/*
     local answer=$(grep Mimir $LIBRARY/*txt* | wc -l)
@@ -51,7 +51,7 @@ EOF
     chmod u-rwx $LIBRARY
 }
 
-function setup_skeletons () {
+function setup_skeletons {
     local skeleton_sayings=( "Rattle me BONES, I'm a skeleton!"
                              "Listen to me play a xylophone solo on my RIBS!"
                              "I wish I could go to the Prom, but I have no BODY to go with. :("
@@ -67,7 +67,7 @@ function setup_skeletons () {
     done
 }
 
-function setup_all() {
+function setup_all{
     setup_wateringholes
     setup_catacombs
     setup_skeletons
