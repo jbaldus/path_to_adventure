@@ -5,14 +5,14 @@ BOLD=$'\e[1;31m'
 RESET=$'\e[0m'
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-COTTAGE=$DIR/cottage
+WORLD=$DIR/world
+COTTAGE=$WORLD/cottage
 CHEST=$COTTAGE/treasure_chest
-OUTSIDE=$COTTAGE/outside
-FOREST=$OUTSIDE/forest
+FOREST=$WORLD/forest
 GLEN=$FOREST/.hidden_glen
 CAVE=$FOREST/cave
-DESERT=$OUTSIDE/desert
-CASTLE=$OUTSIDE/castle
+DESERT=$WORLD/desert
+CASTLE=$WORLD/castle
 LIBRARY=$CASTLE/library
 CATACOMBS=$LIBRARY/catacombs
 RUINS=$DESERT/ruins
@@ -37,16 +37,16 @@ WRONG_WATERINGHOLE=0
 TOTAL=0
 
 function score_cave {
-    if [ -f $CHEST/treasure_cave ] &&
-       [ ! -d $CAVE ]; then
+    if [ -f "$CHEST/treasure_cave" ] &&
+       [ ! -d "$CAVE" ]; then
         ITEMS[cave]=2
     fi
 }
 
 function score_castle {
-    if [ -r $LIBRARY ] && 
-       [ -w $LIBRARY ] && 
-       [ -x $LIBRARY ]; then
+    if [ -r "$LIBRARY" ] && 
+       [ -w "$LIBRARY" ] && 
+       [ -x "$LIBRARY" ]; then
        ITEMS[castle]=3
     fi
 }
@@ -80,21 +80,21 @@ function score_desert {
 }
 
 function score_ruins {
-    if [ -e $CHEST/.treasure_ruins ] && 
+    if [ -e "$CHEST/.treasure_ruins" ] && 
        [ ! "$(ls $RUINS/*skeleton* 2>/dev/null)" ]; then
         ITEMS[ruins]=3
     fi
 }
 
 function score_forest {
-    if [ -e $FOREST/odin ]; then
+    if [ -e "$FOREST/odin" ]; then
         ITEMS[forest]=4
     fi
 }
 
 function score_glen {
-    if [ -e $GLEN/elkimer ] && 
-       [ -e $CHEST/.treasure_glen ]; then
+    if [ -e "$GLEN/elkimer" ] && 
+       [ -e "$CHEST/.treasure_glen" ]; then
         ITEMS[glen]=8
     fi
 }
@@ -109,16 +109,16 @@ function score_library {
 }
 
 function score_cottage {
-    if [ -d $CHEST ]; then
+    if [ -d "$CHEST" ]; then
         ITEMS[cottage_chest]=1
     fi
-    if [ -e $COTTAGE/name.txt ]; then
+    if [ -e "$COTTAGE/name.txt" ]; then
         ITEMS[cottage_name]=1
     fi
 }
 
 function bear_in_treasure_chest {
-    if [ -e $CHEST/bear ]; then
+    if [ -e "$CHEST/bear" ]; then
         BEAR_IN_CHEST=1
         GAME_OVER=1
     fi

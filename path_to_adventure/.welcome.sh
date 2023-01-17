@@ -3,6 +3,7 @@
 source ~/.bashrc
 
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+export WORLD=$DIR/world
 
 export PATH=$DIR:$PATH
 
@@ -160,4 +161,5 @@ If you want to re-enable hard mode, just type ${BOLD}hardmode${RESET}.
 EOF
 }
 
+cd "$WORLD"
 welcome_message
