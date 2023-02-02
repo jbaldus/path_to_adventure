@@ -13,12 +13,92 @@ export RESET=$'\e[0m'
 export HARDMODE=0
 
 export NORMALMODE_PROMPT='\[\e[01;32m\]\u@\h\[\e[0m\]:\[\e[01;34m\]\w\[\e[0m\] [P2A] \[\e[01;33m\]\$\[\e[0m\] '
-export HARDMODE_PROMPT='[P2A] \[\e[01;33m\]\$\[\e[0m\] '
+export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 
 export PROMPT_COMMAND='[ $HARDMODE -eq 0 ] && [ `history 1 | cut -d" " -f4 | head -n1` == cd ] && [ -e ./README ] && cat README'
 
+###############################################################################
+##                                                                           ##
+##                           SETUP FUNCTIONS                                 ##
+##                                                                           ##
+###############################################################################
+COTTAGE=$WORLD/cottage
+
+function setup_wateringholes {
+  local DESERT=$WORLD/desert
+  rm $DESERT/wateringhole_*
+  local wateringhole_dates=( "19 May 2001" 
+                             "26 Sep 2019" 
+                             "02 Oct 2019"                              
+                             "12 Mar 2015" 
+                             "17 Jul 2017" 
+                             "13 May 1987" 
+                             "22 Nov 2001" 
+                             "11 Apr 2008" 
+                             "03 Apr 2005" 
+                             "27 Sep 1995" )
+
+  for i in {0..9}; do
+    touch --date "${wateringhole_dates[$i]}" $DESERT/wateringhole_$i
+  done
+}
+
+function setup_catacombs {
+  local CASTLE=$WORLD/castle
+  local LIBRARY=$CASTLE/library
+  local CATACOMBS=$LIBRARY/catacombs
+
+  chmod u+rwx $LIBRARY
+  rm -rf $CATACOMBS/*
+  local answer=$(grep Mimir $LIBRARY/*txt* | wc -l)
+
+  for i in {1..415}; do
+    mkdir -p $CATACOMBS/$i
+    echo "This is a false treasure" > $CATACOMBS/$i/treasure_$i
+  done
+
+  if [ $answer -ge 1 ] && [ $answer -le 415 ]; then
+    cat << EOF > $CATACOMBS/$answer/treasure_$answer
+Here is your treasure:
+  QUOTE: "Selfies are a lot sadder if you think of them as Alone-ies" 
+  SOURCE: Uninspirational
+EOF
+  else
+    echo Answer $answer, is apparently not between 1 and 415
+  fi
+  chmod u-rwx $LIBRARY
+}
+
+function setup_skeletons {
+  local DESERT=$WORLD/desert
+  local RUINS=$DESERT/ruins
+  local skeleton_sayings=( "Rattle me BONES, I'm a skeleton!"
+                            "Listen to me play a xylophone solo on my RIBS!"
+                            "I wish I could go to the Prom, but I have no BODY to go with. :("
+                            "I'm so calm, cuz nothing gets under my SKIN"
+                            "You better BONE up on your command line skills"
+                            "Don't you think me and my friends are HUMERUS? (That's a name of a bone)")
+  
+  for i in {34..50}; do 
+    echo ${skeleton_sayings[$(($i % ${#skeleton_sayings[@]}))]} > $RUINS/skeleton$i
+  done
+  for i in {287..299}; do 
+    echo ${skeleton_sayings[$(($i % ${#skeleton_sayings[@]}))]} > $RUINS/${i}skeleton
+  done
+}
+
+function setup_all {
+  setup_wateringholes
+  setup_catacombs
+  setup_skeletons
+}
+###############################################################################
+##                                                                           ##
+##                           WELCOME FUNCTIONS                               ##
+##                                                                           ##
+###############################################################################
 
 function welcome_message {
 cat << EOF
@@ -136,11 +216,18 @@ function set_mode {
 function hardmode {
     export PS1=$HARDMODE_PROMPT
     export HARDMODE=1
+    #Switch BOLD and RESET
+    export BOLD=$'\e[0m'
+    export RESET=$'\e[1;31m'
     cat << EOF
+${RESET}
+=========================================================================
 
 Okay. I set it to hard mode for you. Your prompt won't give you any help.
 If you can't handle it, just type ${BOLD}wah-wah${RESET}, and I'll give
 you your old prompt back. Good Luck!
+
+=========================================================================
 
 EOF
 }
@@ -148,8 +235,10 @@ EOF
 function wah-wah {
     export PS1=$NORMALMODE_PROMPT
     export HARDMODE=0
+    export BOLD=$'\e[1;31m'
+    export RESET=$'\e[0m'
     cat << EOF
-
+${RESET}
 Couldn't handle it, eh? That's okay. Get some more practice with the prompt
 there to help you out, and then come back and try hard mode again!
 
@@ -161,5 +250,6 @@ If you want to re-enable hard mode, just type ${BOLD}hardmode${RESET}.
 EOF
 }
 
+setup_all
 cd "$WORLD"
 welcome_message
