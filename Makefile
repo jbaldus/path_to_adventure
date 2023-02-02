@@ -1,5 +1,5 @@
 all:
-	@echo Changing permissions to library and bundling int o build/adv.tar ; \
+	@echo Changing permissions to library and bundling into build/adv.tar ; \
 	mkdir -p ./build ; \
 	bash -c ". setup.sh; setup_wateringholes; setup_skeletons;" ; \
 	chmod 055 ./path_to_adventure/world/castle/library ; \
