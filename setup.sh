@@ -2,26 +2,26 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PTA=$DIR/path_to_adventure
-COTTAGE=$PTA/cottage
-OUTSIDE=$COTTAGE/outside
-FOREST=$OUTSIDE/forest
-DESERT=$OUTSIDE/desert
-CASTLE=$OUTSIDE/castle
+WORLD=$PTA/world
+COTTAGE=$WORLD/cottage
+FOREST=$WORLD/forest
+DESERT=$WORLD/desert
+CASTLE=$WORLD/castle
 LIBRARY=$CASTLE/library
 CATACOMBS=$LIBRARY/catacombs
 RUINS=$DESERT/ruins
 
-function setup_wateringholes{
+function setup_wateringholes {
   rm $DESERT/wateringhole_*
   local wateringhole_dates=( "19 May 2001" 
                              "26 Sep 2019" 
-                             "2  Oct 2019"                              
+                             "02 Oct 2019"                              
                              "12 Mar 2015" 
                              "17 Jul 2017" 
                              "13 May 1987" 
                              "22 Nov 2001" 
                              "11 Apr 2008" 
-                             "3  Apr 2005" 
+                             "03 Apr 2005" 
                              "27 Sep 1995" )
 
   for i in {0..9}; do
@@ -67,7 +67,7 @@ function setup_skeletons {
     done
 }
 
-function setup_all{
+function setup_all {
     setup_wateringholes
     setup_catacombs
     setup_skeletons
