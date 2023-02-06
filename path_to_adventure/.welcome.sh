@@ -17,7 +17,7 @@ export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 
-export PROMPT_COMMAND='[ $HARDMODE -eq 0 ] && [ `history 1 | cut -d" " -f4 | head -n1` == cd ] && [ -e ./README ] && cat README'
+export PROMPT_COMMAND='[[ $HARDMODE -eq 0 ]] && [[ `history 1 | cut -d" " -f4 | head -n1` == cd ]] && [[ -e ./README ]] && cat README'
 
 ###############################################################################
 ##                                                                           ##
@@ -94,6 +94,19 @@ function setup_all {
   setup_catacombs
   setup_skeletons
 }
+
+###############################################################################
+##                                                                           ##
+##                          TEARDOWN FUNCTIONS                               ##
+##                                                                           ##
+###############################################################################
+function cleanup {
+  local CASTLE=$WORLD/castle
+  local LIBRARY=$CASTLE/library
+  sudo chmod u+rwx $LIBRARY
+}
+trap cleanup EXIT HUP INT QUIT TERM
+
 ###############################################################################
 ##                                                                           ##
 ##                           WELCOME FUNCTIONS                               ##
