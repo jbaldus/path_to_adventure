@@ -188,7 +188,7 @@ This is a list of commands that will be useful on your adventure:
 
 ${BOLD}ls${RESET}, ${BOLD}cat${RESET}, ${BOLD}cd${RESET}, ${BOLD}pwd${RESET}, ${BOLD}rm${RESET}, ${BOLD}rmdir${RESET}, ${BOLD}mv${RESET}, ${BOLD}grep${RESET}, ${BOLD}wc${RESET}, ${BOLD}chmod${RESET}, ${BOLD}touch${RESET}, ${BOLD}mkdir${RESET}, ${BOLD}man${RESET}, ${BOLD}echo${RESET}, ${BOLD}vim${RESET}
 
-If you really need extra help, you can type ${BOLD}omg-help${RESET} to get a 
+If you really need extra help, you can type ${BOLD}p2a-help${RESET} to get a 
 quick description of each of these commands.
 
 EOF
@@ -199,7 +199,7 @@ else
 fi
 }
 
-function omg-help {
+function p2a-help {
   if [ $HARDMODE -eq 0 ]; then
 cat << EOF
 

@@ -1,3 +1,4 @@
+
 This is your home. You live here. It is a thatched-roof cottage in a 
 magical land of mystery and adventure. You hear the call of adventure 
 calling you. Get ready for your adventure.
@@ -9,8 +10,14 @@ calling you. Get ready for your adventure.
   bring it back here. You'll need somewhere to put your treasure, though, so 
   CREATE A DIRECTORY named "treasure_chest" right here in your cottage.
 
+  When you find a file with "treasure" in its name, you must MOVE it to your 
+  "treasure_chest" directory
+
 > Now explore the path that lies before you. Use the commands "cd", "ls", and "pwd"
   among others to navigate this world of adventure. Start by leaving home by typing
-  "cd outside" at the prompt. 
+  "cd .." at the prompt. This will take you to the world that contains your little cottage
   
 > Each time you enter a new location, check to see if there is a README with "cat README"
+
+> Unless you are playing in HARD MODE, you can ask for help by typing "p2a-help"
+
