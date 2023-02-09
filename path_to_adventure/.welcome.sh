@@ -12,7 +12,17 @@ export RESET=$'\e[0m'
 
 export HARDMODE=0
 
-export NORMALMODE_PROMPT='\[\e[01;32m\]\u@\h\[\e[0m\]:\[\e[01;34m\]\w\[\e[0m\] [P2A] \[\e[01;33m\]\$\[\e[0m\] '
+function relative_path {
+  cwd=$(pwd)
+  rel_path="${cwd#$DIR/}"
+  if [[ -z $rel_path ]]; then
+    echo -n "$cwd"
+  else
+    echo -n "P2A/$rel_path"
+  fi
+}
+
+export NORMALMODE_PROMPT='\[\e[01;32m\]\u@\h\[\e[0m\]:\[\e[01;34m\]$(relative_path)\[\e[0m\] \[\e[01;33m\]\$\[\e[0m\] '
 export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
