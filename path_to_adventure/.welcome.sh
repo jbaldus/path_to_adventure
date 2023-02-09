@@ -17,7 +17,15 @@ export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 
-export PROMPT_COMMAND='[[ $HARDMODE -eq 0 ]] && [[ `history 1 | cut -d" " -f4 | head -n1` == cd ]] && [[ -e ./README ]] && cat README'
+function auto_readme {
+  if [[ "$(history 1 | cut -d' ' -f4 | head -n1)" == "cd" ]]; then
+    if [[ -e ./README ]]; then
+      cat ./README
+    fi
+  fi
+}
+
+export PROMPT_COMMAND='[[ $HARDMODE -eq 0 ]] && [[ $AUTOREADME -eq 1 ]] && auto_readme'
 
 ###############################################################################
 ##                                                                           ##
