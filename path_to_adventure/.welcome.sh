@@ -94,6 +94,19 @@ function setup_all {
   setup_catacombs
   setup_skeletons
 }
+
+###############################################################################
+##                                                                           ##
+##                          TEARDOWN FUNCTIONS                               ##
+##                                                                           ##
+###############################################################################
+function cleanup {
+  local CASTLE=$WORLD/castle
+  local LIBRARY=$CASTLE/library
+  sudo chmod u+rwx $LIBRARY
+}
+trap cleanup EXIT HUP INT QUIT TERM
+
 ###############################################################################
 ##                                                                           ##
 ##                           WELCOME FUNCTIONS                               ##
