@@ -3,10 +3,10 @@
 source ~/.bashrc
 
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-export WORLD=$DIR/world
 
 # Add a link to the root directory to make it easier to find.
-sudo ln -sf $DIR /P2A
+sudo ln -sf $DIR/world /World
+export WORLD=/World
 
 export PATH=$DIR:$PATH
 
@@ -15,17 +15,7 @@ export RESET=$'\e[0m'
 
 export HARDMODE=0
 
-function relative_path {
-  cwd=$(pwd)
-  rel_path="${cwd#$DIR/}"
-  if [[ -z $rel_path ]]; then
-    echo -n "$cwd"
-  else
-    echo -n "P2A/$rel_path"
-  fi
-}
-
-export NORMALMODE_PROMPT='\[\e[01;32m\]\u@\h\[\e[0m\]:\[\e[01;34m\]$(relative_path)\[\e[0m\] \[\e[01;33m\]\$\[\e[0m\] '
+export NORMALMODE_PROMPT='\[\e[01;32m\]\u@\h\[\e[0m\]:\[\e[01;34m\]\w\[\e[0m\] \[\e[01;33m\]\$\[\e[0m\] '
 export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
