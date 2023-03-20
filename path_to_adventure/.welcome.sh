@@ -117,7 +117,7 @@ function cleanup {
   local LIBRARY=$CASTLE/library
   sudo chmod u+rwx $LIBRARY
   # Remove link from root of directory
-  [[ -L /P2A ]] && sudo rm /P2A
+  [[ -L /World ]] && sudo rm /World
 }
 trap cleanup EXIT HUP INT QUIT TERM
 
