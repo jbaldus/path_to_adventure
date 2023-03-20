@@ -5,6 +5,9 @@ source ~/.bashrc
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export WORLD=$DIR/world
 
+# Add a link to the root directory to make it easier to find.
+sudo ln -sf $DIR /P2A
+
 export PATH=$DIR:$PATH
 
 export BOLD=$'\e[1;31m'
@@ -92,7 +95,7 @@ EOF
 function setup_skeletons {
   local DESERT=$WORLD/desert
   local RUINS=$DESERT/ruins
-  local skeleton_sayings=( "Rattle me BONES, I'm a skeleton!"
+  local skeleton_sayings=(  "Rattle me BONES, I'm a skeleton!"
                             "Listen to me play a xylophone solo on my RIBS!"
                             "I wish I could go to the Prom, but I have no BODY to go with. :("
                             "I'm so calm, cuz nothing gets under my SKIN"
@@ -119,9 +122,12 @@ function setup_all {
 ##                                                                           ##
 ###############################################################################
 function cleanup {
+  # Fix permissions on LIBRARY
   local CASTLE=$WORLD/castle
   local LIBRARY=$CASTLE/library
   sudo chmod u+rwx $LIBRARY
+  # Remove link from root of directory
+  [[ -L /P2A ]] && sudo rm /P2A
 }
 trap cleanup EXIT HUP INT QUIT TERM
 
