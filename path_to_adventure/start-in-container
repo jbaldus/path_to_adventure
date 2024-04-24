@@ -1,0 +1,8 @@
+#!/bin/bash
+
+globaldir=/World
+
+sudo ln -sf $PWD/path_to_adventure/world $globaldir
+
+bash --init-file .welcome.sh -i
+
