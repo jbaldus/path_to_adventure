@@ -21,7 +21,8 @@ export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 export PS1=$NORMALMODE_PROMPT
 
 function auto_readme {
-  if [[ "$(history 1 | cut -d' ' -f4 | head -n1)" == "cd" ]]; then
+  LAST_COMMAND=$(HISTTIMEFORMAT= history 1 | sed -E "s/[ ]*[0-9]+[ ]*([^ ]+).*/\1/")
+  if [[ "$LAST_COMMAND" == "cd" ]] 2>/dev/null; then
     if [[ -e ./README ]]; then
       cat ./README
     fi
