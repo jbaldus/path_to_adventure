@@ -20,23 +20,12 @@ export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 
-function auto_readme {
-  LAST_COMMAND=$(HISTTIMEFORMAT= history 1 | sed -E "s/[ ]*[0-9]+[ ]*([^ ]+).*/\1/")
-  if [[ "$LAST_COMMAND" == "cd" ]] 2>/dev/null; then
-    if [[ -e ./README ]]; then
-      cat ./README
-    fi
-  fi
-}
-
-export PROMPT_COMMAND='[[ $HARDMODE -eq 0 ]] && [[ $AUTOREADME -eq 1 ]] && auto_readme'
-
-
 
 source .setup-world.sh
 source .help.sh
 source .gamemode.sh
 source .welcome.sh
+source .instant-responses.sh
 
 ########################
 ##   START THE GAME   ##
