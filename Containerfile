@@ -30,6 +30,6 @@ COPY path_to_adventure/ .
 RUN sudo chown -R user:user /app;\
     sudo chmod 055 /app/world/castle/library
 
-CMD ["./start-in-container"]
+CMD ["/bin/bash", "--init-file", ".init.sh", "-i"]
 
 
