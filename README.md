@@ -26,8 +26,32 @@ This little game will give practice with using these commands:
   * `vim` with the basic `i`, `<ESC>`, and `:wq` OR
   * `nano` with instruction on how to understand the menu
 
-## Running
+## Running on your regular system
+
+In order to run this game, you will need to have the ability to use `sudo` to elevate your privileges.
 
 To run this game, you can download the `adv.tar` file from the Releases page. Untar the file with `tar -xf adv.tar`. Then change to the `path_to_adventure` directory and start the game with `./start`
 
 If you clone this repository and want to run the game, you need to first run the setup.sh script. This will set up the correct permissions and files for the Ruins and Catacombs.
+
+## Running in a container
+
+If you don't have the ability to use sudo on your main system, but you *can* run containers with `podman`, you can play the game with a simple 
+
+```bash
+podman run -it quay.io/jbaldus/path_to_adventure
+```
+
+---
+
+If you want to build your own local container, first clone the repository. Then you can build a container to play this game in using the Containerfile with the following command:
+
+```bash
+podman build . -t path_to_adventure
+```
+
+Then you can play it with 
+
+```bash
+podman run -it localhost/path_to_adventure
+```
