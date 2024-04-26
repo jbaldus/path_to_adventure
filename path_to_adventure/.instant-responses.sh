@@ -22,6 +22,13 @@ precmd_functions+=(auto_readme)
 did-you-just-win () { :; }
 precmd_functions+=(did-you-just-win)
 
+put-bear-in-chest () {
+    if [ -e "/World/cottage/treasure_chest/bear" ]; then
+        score
+    fi 
+}    
+precmd_functions+=(put-bear-in-chest)
+
 #################################################################
 ##  PREEXEC FUNCTIONS HAPPEN RIGHT BEFORE COMMAND IS EXECUTED  ##
 ##  ---------------------------------------------------------  ##
