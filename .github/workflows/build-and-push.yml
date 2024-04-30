@@ -1,0 +1,30 @@
+name: Build and Push Container
+
+on:
+  push:
+    branches:
+      - main  # Change this to your default branch if it's different
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push container
+        run: |
+          podman build . -t quay.io/jbaldus/path_to_adventure:latest
+          podman login -u ${{ secrets.QUAY_USERNAME }} -p ${{ secrets.QUAY_PASSWORD }} quay.io
+          podman push quay.io/jbaldus/path_to_adventure:latest
+        env:
+          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
+          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+
