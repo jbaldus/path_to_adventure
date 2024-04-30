@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and push container
         run: |
-          docker buildx . -t quay.io/jbaldus/path_to_adventure:latest
+          docker build . -t quay.io/jbaldus/path_to_adventure:latest
           docker login -u ${{ secrets.QUAY_USERNAME }} -p ${{ secrets.QUAY_PASSWORD }} quay.io
           docker push quay.io/jbaldus/path_to_adventure:latest
         env:
