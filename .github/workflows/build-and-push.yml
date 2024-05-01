@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and push container
         run: |
-          podman build . -t quay.io/jbaldus/path_to_adventure:latest
           podman login -u ${{ secrets.QUAY_USERNAME }} -p ${{ secrets.QUAY_PASSWORD }} quay.io
+          podman build . -t path_to_adventure:latest
           podman push quay.io/jbaldus/path_to_adventure:latest
         env:
           QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
