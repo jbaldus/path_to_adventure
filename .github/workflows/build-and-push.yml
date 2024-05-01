@@ -26,7 +26,7 @@ jobs:
 
       - name: Build container
         id: build-image
-        uses: redhat-actions/buildah-build@v1
+        uses: redhat-actions/buildah-build@v2
         with:
           image: path_to_advenure
           tags: latest ${{ github.sha }}
