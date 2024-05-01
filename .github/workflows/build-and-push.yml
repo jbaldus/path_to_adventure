@@ -5,6 +5,10 @@ on:
     branches:
       - main  # Change this to your default branch if it's different
 
+env:
+  QUAY_USERNAME: jbaldus
+  QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -13,12 +17,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build and push container
-        run: |
-          podman build . -t path_to_adventure:latest
-          podman login -u ${{ secrets.QUAY_USERNAME }} -p ${{ secrets.QUAY_PASSWORD }} quay.io
-          podman push quay.io/jbaldus/path_to_adventure:latest
-        env:
-          QUAY_USERNAME: ${{ secrets.QUAY_USERNAME }}
-          QUAY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
+      - name: Log in to Quay.io
+        uses: redhat-actions/podman-login@v1
+        with:
+          username: ${{ env.QUAY_USERNAME }}
+          password: ${{ env.QUAY_PASSWORD }}
+          registry: quay.io
+
+      - name: Build container
+        id: build-image
+        uses: redhat-actions/buildah-build@v1
+        with:
+          image: path_to_advenure
+          tags: latest ${{ github.sha }}
+          containerfiles: |
+            ./Containerfile
+
+      - name: Push container
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags:  ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/${{ env.QUAY_USERNAME }}
+          username: ${{ env.QUAY_USERNAME }}
+          password: ${{ env.QUAY_PASSWORD }}
 
