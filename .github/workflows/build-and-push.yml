@@ -17,18 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Log in to Quay.io
-        uses: redhat-actions/podman-login@v1
-        with:
-          username: ${{ env.QUAY_USERNAME }}
-          password: ${{ env.QUAY_PASSWORD }}
-          registry: quay.io
-
       - name: Build container
         id: build-image
         uses: redhat-actions/buildah-build@v2
         with:
-          image: path_to_advenure
+          image: path_to_adventure
           tags: latest ${{ github.sha }}
           containerfiles: |
             ./Containerfile
