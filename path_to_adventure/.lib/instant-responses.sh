@@ -1,4 +1,4 @@
-source .bash-preexec.sh
+source .lib/bash-preexec.sh
 
 shopt -s extdebug
 

@@ -21,11 +21,11 @@ export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 export PS1=$NORMALMODE_PROMPT
 
 
-source .setup-world.sh
-source .help.sh
-source .gamemode.sh
-source .welcome.sh
-source .instant-responses.sh
+source .lib/setup-world.sh
+source .lib/help.sh
+source .lib/gamemode.sh
+source .lib/welcome.sh
+source .lib/instant-responses.sh
 
 ########################
 ##   START THE GAME   ##
