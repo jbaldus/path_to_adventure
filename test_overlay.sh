@@ -28,7 +28,6 @@ merged=$(mktemp -d)
 sudo mount -t overlay -o rw,lowerdir="$pta",upperdir=$upperdir,workdir=$workdir none $merged
 sudo ln -sf $merged/path_to_adventure/world $globaldir
 
-$merged/setup.sh
 cd $merged/path_to_adventure
-bash --init-file .welcome.sh -i
+bash --init-file .init.sh -i
 
