@@ -1,15 +1,15 @@
 #!/usr/bin/bash
 
+function dbg {
+    echo $@
+}
 
 BOLD=$'\e[1;31m'
 RESET=$'\e[0m'
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-WORLD=$DIR/world
-COTTAGE=$WORLD/cottage
-CHEST=$COTTAGE/treasure_chest
-FOREST=$WORLD/forest
-GLEN=$FOREST/.hidden_glen
+export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+export WORLD=$DIR/world
+export CHEST=$WORLD/cottage/
 CAVE=$FOREST/cave
 DESERT=$WORLD/desert
 CASTLE=$WORLD/castle
@@ -19,17 +19,19 @@ RUINS=$DESERT/ruins
 
 declare -A ITEMS
 ITEMS=(
-    [cottage_chest]=0
-    [cottage_name]=0
     [cave]=0
     [castle]=0
     [library]=0
     [desert]=0
     [ruins]=0
-    [forest]=0
-    [glen]=0
     [bear_in_chest]=0
 )
+declare -A POSSIBLE_POINTS
+declare -A SCORING_FUNCTIONS
+
+export ITEMS
+export POSSIBLE_POINTS
+export SCORING_FUNCTIONS
 
 GAME_OVER=0
 BEAR_IN_CHEST=0
@@ -86,18 +88,6 @@ function score_ruins {
     fi
 }
 
-function score_forest {
-    if [ -e "$FOREST/odin" ]; then
-        ITEMS[forest]=4
-    fi
-}
-
-function score_glen {
-    if [ -e "$GLEN/elkimer" ] && 
-       [ -e "$CHEST/.treasure_glen" ]; then
-        ITEMS[glen]=8
-    fi
-}
 
 function score_library {
     if [ ${ITEMS[castle]} -ne 0 ]; then 
@@ -108,15 +98,6 @@ function score_library {
     fi
 }
 
-function score_cottage {
-    if [ -d "$CHEST" ]; then
-        ITEMS[cottage_chest]=1
-    fi
-    if [ -e "$COTTAGE/name.txt" ]; then
-        ITEMS[cottage_name]=1
-    fi
-}
-
 function bear_in_treasure_chest {
     if [ -e "$CHEST/bear" ]; then
         BEAR_IN_CHEST=1
@@ -124,16 +105,31 @@ function bear_in_treasure_chest {
     fi
 }
 
-function score_all {
+SCORING_FUNCTIONS+=(
     score_castle
     score_cave
-    score_cottage
     score_desert
-    score_forest
     score_glen
     score_library
     score_ruins
     bear_in_treasure_chest
+)
+
+function load_all_scoring {
+    for resource_dir in $(find $WORLD -type d -name __pta_resources); do
+        for scorer in "$resource_dir/*score.sh"; do
+            if [[ $scorer != "$resource_dir"/'*score.sh' ]]; then
+                dbg "Sourcing $scorer"
+                source "$scorer"
+            fi
+        done
+    done
+}
+
+function score_all {
+    for scoring_function in "${SCORING_FUNCTIONS[@]}"; do
+        "$scoring_function"
+    done
 }
 
 function print_bear_in_chest {
