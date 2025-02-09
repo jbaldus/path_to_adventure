@@ -2,7 +2,7 @@
 # Based on the ubuntu-toolbox image, since it includes a normal set of 
 # ubuntu tools. I haven't spent the time to figure out how to get everything
 # to work with the bare ubuntu image
-FROM quay.io/toolbx-images/ubuntu-toolbox:22.04
+FROM quay.io/toolbx/ubuntu-toolbox:22.04
 #FROM ubuntu:latest
 
 # Make sure the needed software is installed
