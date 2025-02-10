@@ -35,7 +35,7 @@ export CHEST=$COTTAGE/treasure_chest
 
 # ITEMS
 ITEMS[cottage_chest]=0
-ITEMS[cottage_name]=0]
+ITEMS[cottage_name]=0
 
 # POSSIBLE_POINTS
 POSSIBLE_POINTS[cottage_chest]=1

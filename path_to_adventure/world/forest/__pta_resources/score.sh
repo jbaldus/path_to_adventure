@@ -29,6 +29,9 @@
 # 
 # =============================================================================
 
+export FOREST=$WORLD/forest
+export GLEN=$FOREST/.hidden_glen
+
 # ITEMS
 ITEMS[forest]=0
 ITEMS[glen]=0
@@ -39,19 +42,17 @@ POSSIBLE_POINTS[glen]=8
 
 # SCORING_FUNCTIONS
 function score_forest {
-    local FOREST=$WORLD/forest
-    if [ -e "$FOREST/odin" ]; then
+    if [[ -e "$FOREST/odin" ]]; then
         ITEMS[forest]=4
     fi
 }
 
 function score_glen {
-    local FOREST=$WORLD/forest
-    local $GLEN=$FOREST/.hidden_glen
-    if [ -e "$GLEN/elkimer" ] && 
-       [ -e "$CHEST/.treasure_glen" ]; then
+    if [[ -e "$GLEN/elkimer" ]] && 
+       [[ -e "$CHEST/.treasure_glen" ]]; then
         ITEMS[glen]=8
     fi
 }
 
-SCORING_FUNCTIONS+=(score_forest score_glen)
+SCORING_FUNCTIONS+=(score_forest)
+SCORING_FUNCTIONS+=(score_glen)
