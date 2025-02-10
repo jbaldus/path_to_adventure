@@ -1,3 +1,11 @@
+# Avoid duplicate inclusion
+if [[ -n "${__pta_gather_resources_imported:-}" ]]; then
+    return 0
+fi
+__pta_gather_resources_imported="defined"
+
+
+
 source .lib/utils.sh
 
 function dbg {
@@ -10,10 +18,11 @@ function dbg {
 # `$WORLD/forest/cave/__pta_resources` directory will be moved 
 # to `$DIR/resources/World/forest/cave`.
 
-mkdir -p "$DIR/resources"
-export RESOURCES="$DIR/resources"
 
-function move_resources {
+export RESOURCES="$DIR/resources"
+mkdir -p "$RESOURCES"
+
+function __pta_move_resources {
     local RESOURCE_DIR
     for RESOURCE_DIR in $(sudo find -H $WORLD -type d -name __pta_resources 2>/dev/null); do
         local DEST_DIR="${RESOURCES}$(dirname "$RESOURCE_DIR")"
@@ -22,7 +31,7 @@ function move_resources {
         mv "$RESOURCE_DIR" "$DEST_DIR"
     done
 }
-move_resources
+__pta_move_resources
 
 
 # It will also create a directory for all the scoring scripts 
@@ -35,16 +44,30 @@ move_resources
 # the scoring scripts by naming them with numbers. These scripts will be sourced 
 # by the `score` command, in that order.
 
-export SCORE_DIR=$RESOURCES/scoring
-mkdir -p "$SCORE_DIR"
-
-function gather_scoring_scripts {
-    local SCRIPT
-    for SCRIPT in $(find -H $RESOURCES -name *score.sh); do
-        local REVNAME=$(reverse-filepath "$SCRIPT")
-        echo "Linking $SCRIPT ==> $SCORE_DIR/$REVNAME"
-        ln -s $SCRIPT $SCORE_DIR/$REVNAME
+function __pta_gather { #filepattern #directory
+    local filepattern="$1"
+    local directory="$2"
+    local thisfile
+    for thisfile in $(find -H $RESOURCES -name $filepattern); do
+        local revname=$(reverse-filepath "$thisfile")
+        dbg "Linking $thisfile ==> $directory/$revname"
+        ln -s $thisfile $directory/$revname
     done
 }
 
-gather_scoring_scripts
+export SCORE_DIR="$RESOURCES/scoring"
+mkdir -p "$SCORE_DIR"
+
+__pta_gather '*score.sh' "$SCORE_DIR"
+
+# Similarly create directory for setup scripts:
+export SETUP_DIR="$RESOURCES/setup"
+mkdir -p "$SETUP_DIR"
+
+__pta_gather '*setup.sh' "$SETUP_DIR"
+
+# Also, for preexec scripts:
+export PREEXEC_DIR="$RESOURCES/preexec"
+mkdir -p "$PREEXEC_DIR"
+
+__pta_gather '*preexec.sh' "$PREEXEC_DIR"
