@@ -25,37 +25,33 @@
 #   interested in
 # =============================================================================
 # 
-# COTTAGE SCORING SCRIPTS
+# RUINS SCORING SCRIPTS
 # 
 # =============================================================================
 
 # Avoid duplicate inclusion
-if [[ -n "${__pta_cottage_score_imported:-}" ]]; then
+if [[ -n "${__pta_ruins_score_imported:-}" ]]; then
     return 0
 fi
-__pta_cottage_score_imported="defined"
-
+__pta_ruins_score_imported="defined"
 
 # EXPORTS
-export COTTAGE=$WORLD/cottage
-export CHEST=$COTTAGE/treasure_chest
+export DESERT=$WORLD/desert
+export RUINS=$DESERT/ruins
 
 # ITEMS
-ITEMS[cottage_chest]=0
-ITEMS[cottage_name]=0
+ITEMS[ruins]=0
 
 # POSSIBLE_POINTS
-POSSIBLE_POINTS[cottage_chest]=1
-POSSIBLE_POINTS[cottage_name]=1
+POSSIBLE_POINTS[ruins]=3
 
 # SCORING_FUNCTIONS
-function score_cottage {
-    if [ -d "$CHEST" ]; then
-        ITEMS[cottage_chest]=1
-    fi
-    if [ -e "$COTTAGE/name.txt" ]; then
-        ITEMS[cottage_name]=1
+
+function score_ruins {
+    if [[ -e "$CHEST/.treasure_ruins" ]] && 
+       [[ ! "$(ls $RUINS/*skeleton* 2>/dev/null)" ]]; then
+        ITEMS[ruins]=3
     fi
 }
+SCORING_FUNCTIONS+=(score_ruins)
 
-SCORING_FUNCTIONS+=(score_cottage)

@@ -25,37 +25,55 @@
 #   interested in
 # =============================================================================
 # 
-# COTTAGE SCORING SCRIPTS
+# DESERT SCORING SCRIPTS
 # 
 # =============================================================================
 
 # Avoid duplicate inclusion
-if [[ -n "${__pta_cottage_score_imported:-}" ]]; then
+if [[ -n "${__pta_desert_score_imported:-}" ]]; then
     return 0
 fi
-__pta_cottage_score_imported="defined"
+__pta_desert_score_imported="defined"
 
 
 # EXPORTS
-export COTTAGE=$WORLD/cottage
-export CHEST=$COTTAGE/treasure_chest
+export DESERT=$WORLD/desert
 
 # ITEMS
-ITEMS[cottage_chest]=0
-ITEMS[cottage_name]=0
+ITEMS[desert]=0
 
 # POSSIBLE_POINTS
-POSSIBLE_POINTS[cottage_chest]=1
-POSSIBLE_POINTS[cottage_name]=1
+POSSIBLE_POINTS[desert]=4
 
 # SCORING_FUNCTIONS
-function score_cottage {
-    if [ -d "$CHEST" ]; then
-        ITEMS[cottage_chest]=1
-    fi
-    if [ -e "$COTTAGE/name.txt" ]; then
-        ITEMS[cottage_name]=1
-    fi
+function score_desert {
+    # TODO: It would be great if there was a way to randomize what the
+    #       right answer is to this.
+    local wateringhole_dates=( "19 May 2001" 
+                               "26 Sep 2019" 
+                               "02 Oct 2019"                              
+                               "12 Mar 2015" 
+                               "17 Jul 2017" 
+                               "13 May 1987" 
+                               "22 Nov 2001" 
+                               "11 Apr 2008" 
+                               "03 Apr 2005" 
+                               "27 Sep 1995" )
+    local failed=0
+    for i in {0..4} {6..9}; do
+        local date=$(date -r $DESERT/wateringhole_$i "+%d %h %Y" 2>/dev/null)
+        if [[ "$date" != "${wateringhole_dates[$i]}" ]]; then
+          #Break the loop and set game over variable
+          WRONG_WATERINGHOLE=1
+          GAME_OVER=1
+          break
+        fi
+    done
+    if [[ $WRONG_WATERINGHOLE -eq 0 ]]; then
+        if [[ "$(date -r $DESERT/wateringhole_5 '+%d %h %Y' 2>/dev/null)" == "$(date '+%d %h %Y')" ]]; then
+            ITEMS[desert]=4
+        fi
+    fi    
 }
+SCORING_FUNCTIONS+=(score_desert)
 
-SCORING_FUNCTIONS+=(score_cottage)

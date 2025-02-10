@@ -25,37 +25,47 @@
 #   interested in
 # =============================================================================
 # 
-# COTTAGE SCORING SCRIPTS
+# CASTLE & LIBRARY SCORING SCRIPTS
 # 
 # =============================================================================
 
 # Avoid duplicate inclusion
-if [[ -n "${__pta_cottage_score_imported:-}" ]]; then
+if [[ -n "${__pta_castle_score_imported:-}" ]]; then
     return 0
 fi
-__pta_cottage_score_imported="defined"
+__pta_castle_score_imported="defined"
 
 
 # EXPORTS
-export COTTAGE=$WORLD/cottage
-export CHEST=$COTTAGE/treasure_chest
+export CASTLE=$WORLD/castle
+export LIBRARY=$CASTLE/library
 
 # ITEMS
-ITEMS[cottage_chest]=0
-ITEMS[cottage_name]=0
+ITEMS[castle]=0
+ITEMS[library]=0
 
 # POSSIBLE_POINTS
-POSSIBLE_POINTS[cottage_chest]=1
-POSSIBLE_POINTS[cottage_name]=1
+POSSIBLE_POINTS[castle]=3
+POSSIBLE_POINTS[library]=6
 
 # SCORING_FUNCTIONS
-function score_cottage {
-    if [ -d "$CHEST" ]; then
-        ITEMS[cottage_chest]=1
-    fi
-    if [ -e "$COTTAGE/name.txt" ]; then
-        ITEMS[cottage_name]=1
+
+function score_castle {
+    if [[ -r "$LIBRARY" ]] && 
+       [[ -w "$LIBRARY" ]] && 
+       [[ -x "$LIBRARY" ]]; then
+       ITEMS[castle]=3
     fi
 }
+SCORING_FUNCTIONS+=(score_castle)
 
+
+function score_library {
+    if [[ ${ITEMS[castle]} -ne 0 ]]; then 
+        local answer=$(grep Mimir $LIBRARY/*txt* | wc -l)
+        if [[ -e "$CHEST/treasure_${answer}" ]]; then
+            ITEMS[library]=6
+        fi
+    fi
+}
 SCORING_FUNCTIONS+=(score_cottage)

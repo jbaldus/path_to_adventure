@@ -4,10 +4,12 @@ function dbg {
     echo $@
 }
 
+
 BOLD=$'\e[1;31m'
 RESET=$'\e[0m'
 
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source $DIR/.lib/utils.sh
 export WORLD=$DIR/world
 export CHEST=$WORLD/cottage/
 CAVE=$FOREST/cave
@@ -20,10 +22,6 @@ RUINS=$DESERT/ruins
 declare -A ITEMS
 ITEMS=(
     [cave]=0
-    [castle]=0
-    [library]=0
-    [desert]=0
-    [ruins]=0
     [bear_in_chest]=0
 )
 declare -A POSSIBLE_POINTS
@@ -37,81 +35,7 @@ GAME_OVER=0
 BEAR_IN_CHEST=0
 WRONG_WATERINGHOLE=0
 
-function score_cave {
-    if [[ -f "$CHEST/treasure_cave" ]] &&
-       [[ ! -d "$CAVE" ]]; then
-        ITEMS[cave]=2
-    fi
-}
 
-function score_castle {
-    if [[ -r "$LIBRARY" ]] && 
-       [[ -w "$LIBRARY" ]] && 
-       [[ -x "$LIBRARY" ]]; then
-       ITEMS[castle]=3
-    fi
-}
-
-function score_desert {
-    local wateringhole_dates=( "19 May 2001" 
-                               "26 Sep 2019" 
-                               "02 Oct 2019"                              
-                               "12 Mar 2015" 
-                               "17 Jul 2017" 
-                               "13 May 1987" 
-                               "22 Nov 2001" 
-                               "11 Apr 2008" 
-                               "03 Apr 2005" 
-                               "27 Sep 1995" )
-    local failed=0
-    for i in {0..4} {6..9}; do
-        local date=$(date -r $DESERT/wateringhole_$i "+%d %h %Y" 2>/dev/null)
-        if [[ "$date" != "${wateringhole_dates[$i]}" ]]; then
-          #Break the loop and set game over variable
-          WRONG_WATERINGHOLE=1
-          GAME_OVER=1
-          break
-        fi
-    done
-    if [[ $WRONG_WATERINGHOLE -eq 0 ]]; then
-        if [[ "$(date -r $DESERT/wateringhole_5 '+%d %h %Y' 2>/dev/null)" == "$(date '+%d %h %Y')" ]]; then
-            ITEMS[desert]=4
-        fi
-    fi    
-}
-
-function score_ruins {
-    if [[ -e "$CHEST/.treasure_ruins" ]] && 
-       [[ ! "$(ls $RUINS/*skeleton* 2>/dev/null)" ]]; then
-        ITEMS[ruins]=3
-    fi
-}
-
-
-function score_library {
-    if [[ ${ITEMS[castle]} -ne 0 ]]; then 
-        local answer=$(grep Mimir $LIBRARY/*txt* | wc -l)
-        if [[ -e "$CHEST/treasure_${answer}" ]]; then
-            ITEMS[library]=6
-        fi
-    fi
-}
-
-function bear_in_treasure_chest {
-    if [[ -e "$CHEST/bear" ]]; then
-        BEAR_IN_CHEST=1
-        GAME_OVER=1
-    fi
-}
-
-SCORING_FUNCTIONS+=(
-    score_castle
-    score_cave
-    score_desert
-    score_library
-    score_ruins
-    bear_in_treasure_chest
-)
 
 function load_all_scoring {
     # for resource_dir in $(find $WORLD -type d -name __pta_resources 2>/dev/null); do
@@ -121,12 +45,13 @@ function load_all_scoring {
     #         fi
     #     done
     # done
-    local script
-    for script in "$SCORE_DIR"/*; do
-        if [[ -e "$script" ]]; then 
-            source "$script"
-        fi
-    done
+    # local script
+    # for script in "$SCORE_DIR"/*; do
+    #     if [[ -e "$script" ]]; then 
+    #         source "$script"
+    #     fi
+    # done
+    __pta_load_all "$SCORE_DIR"
 }
 
 function score_all {

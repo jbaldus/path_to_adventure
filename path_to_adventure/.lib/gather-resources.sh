@@ -8,10 +8,6 @@ __pta_gather_resources_imported="defined"
 
 source .lib/utils.sh
 
-function dbg {
-    echo $@ >/dev/null
-}
-
 # This script will gather all the `__pta_resources` directories here in $DIR 
 # under a directory called `resources`. The `__pta_resources` directories will 
 # be renamed to their parent directories, so, for example, the 
@@ -49,7 +45,7 @@ function __pta_gather { #filepattern #directory
     local directory="$2"
     local thisfile
     for thisfile in $(find -H $RESOURCES -name $filepattern); do
-        local revname=$(reverse-filepath "$thisfile")
+        local revname=$(__pta_reverse-filepath "$thisfile")
         dbg "Linking $thisfile ==> $directory/$revname"
         ln -s $thisfile $directory/$revname
     done
