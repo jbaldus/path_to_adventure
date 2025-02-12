@@ -77,3 +77,7 @@ function score_desert {
 }
 SCORING_FUNCTIONS+=(score_desert)
 
+
+# PRINTING_FUNCTIONS: Print point summaries 
+#   - just use the generic function
+PRINTING_FUNCTIONS[desert]=generic_print_function

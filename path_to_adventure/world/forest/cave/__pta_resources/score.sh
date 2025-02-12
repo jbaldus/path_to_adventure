@@ -64,3 +64,8 @@ function bear_in_treasure_chest {
 SCORING_FUNCTIONS+=(score_cave)
 SCORING_FUNCTIONS+=(bear_in_treasure_chest)
 
+
+# PRINTING_FUNCTIONS: Print point summaries 
+#   - just use the generic function
+PRINTING_FUNCTIONS[cave]=generic_print_function
+

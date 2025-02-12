@@ -20,16 +20,14 @@ CATACOMBS=$LIBRARY/catacombs
 RUINS=$DESERT/ruins
 
 declare -A ITEMS
-ITEMS=(
-    [cave]=0
-    [bear_in_chest]=0
-)
 declare -A POSSIBLE_POINTS
 declare -a SCORING_FUNCTIONS
+declare -A PRINTING_FUNCTIONS
 
 export ITEMS
 export POSSIBLE_POINTS
 export SCORING_FUNCTIONS
+export PRINTING_FUNCTIONS
 
 GAME_OVER=0
 BEAR_IN_CHEST=0
@@ -38,19 +36,6 @@ WRONG_WATERINGHOLE=0
 
 
 function load_all_scoring {
-    # for resource_dir in $(find $WORLD -type d -name __pta_resources 2>/dev/null); do
-    #     for scorer in "$resource_dir"/*score.sh; do
-    #         if [[ $scorer != "$resource_dir"/'*score.sh' ]]; then
-    #             source "$scorer"
-    #         fi
-    #     done
-    # done
-    # local script
-    # for script in "$SCORE_DIR"/*; do
-    #     if [[ -e "$script" ]]; then 
-    #         source "$script"
-    #     fi
-    # done
     __pta_load_all "$SCORE_DIR"
 }
 
@@ -58,6 +43,7 @@ function score_all {
     for scoring_function in "${SCORING_FUNCTIONS[@]}"; do
         "$scoring_function"
     done
+    calculate_total
 }
 
 function print_bear_in_chest {
@@ -65,7 +51,7 @@ function print_bear_in_chest {
 
 \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/
 You've put a bear in your treasure chest!
-It eats all your points: -$(calculate_total) Points!
+It eats all your points: -$TOTAL Points!
 And then it eats you!
 
                         ${BOLD}GAME OVER${RESET}
@@ -103,54 +89,91 @@ EOF
 }
 
 function calculate_total {
-    declare -i TOTAL=0
+    export TOTAL=0
     for p in "${ITEMS[@]}"; do
         TOTAL=$((TOTAL + p))
     done
     echo $TOTAL
 }
 
+
+function generic_print_function {
+    local key="$1"
+    if [[ ${ITEMS[$key]} -ne 0 ]] ; then
+        printf "%9s: %d Points\n" "${key^^}" ${ITEMS[$key]}
+    else
+        printf "%9s: Unfinished\n" "${key^^}"
+    fi
+}
+
 function print_score {
-    score_all
     echo ""
     echo "This program will tell you how you have done."
     echo "============================================="
     echo "How did you do for the first steps?"
-    [[ ${ITEMS[cottage_chest]} -ne 0 ]] && echo "Treasure Chest Created: ${ITEMS[cottage_chest]} Point"
-    [[ ${ITEMS[cottage_name]} -ne 0 ]] && echo "Name file created: ${ITEMS[cottage_name]} Point"
-    [[ ${ITEMS[cottage_chest]} -ne 0 && ${ITEMS[cottage_name]} -ne 0 ]] || echo "COTTAGE: Unfinished"
+    "${PRINTING_FUNCTIONS[cottage]}"
+
     echo ""
     echo "Now, how about the rest?"
     echo "========================"
-    [[ ${ITEMS[castle]} -ne 0 ]] && echo " CASTLE: ${ITEMS[castle]} Points" || echo " CASTLE: Unfinished"
-    [[ ${ITEMS[library]} -ne 0 ]] && echo "LIBRARY: ${ITEMS[library]} Points" || echo "LIBRARY: Unfinished"
-    [[ ${ITEMS[desert]} -ne 0 ]] && echo " DESERT: ${ITEMS[desert]} Points" || echo " DESERT: Unfinished"
-    [[ ${ITEMS[ruins]} -ne 0 ]] && echo "  RUINS: ${ITEMS[ruins]} Points" || echo "  RUINS: Unfinished"
-    [[ ${ITEMS[forest]} -ne 0 ]] && echo " FOREST Bonus!: ${ITEMS[forest]} Points"
-    [[ ${ITEMS[cave]} -ne 0 ]] && echo "   CAVE: ${ITEMS[cave]} Points" || echo "   CAVE: Unfinished"
-    [[ ${ITEMS[glen]} -ne 0 ]] && echo "HIDDEN GLEN: ${ITEMS[glen]} Points" || echo "...Hmmm...Did you search everywhere?"
-    if [[ $GAME_OVER -eq 0 ]]; then 
-        local TOTAL=$(calculate_total)
-        echo "==================="
-        echo "TOTAL SCORE: $TOTAL"
-        echo ""
+    local key
+    for key in "${!PRINTING_FUNCTIONS[@]}"; do
+        [[ "$key" == "cottage" ]] && continue
+        if [[ "${PRINTING_FUNCTIONS[$key]}" == "generic_print_function" ]]; then
+            generic_print_function "$key"
+        else
+            "${PRINTING_FUNCTIONS[$key]}"
+        fi
+    done
+     
+    echo "==================="
+    echo "TOTAL SCORE: $TOTAL"
+    echo ""
+    handle_endgame
+}
+
+function handle_endgame {
+    if [[ $GAME_OVER -eq 0 ]]; then
         if [[ $TOTAL -ge 32 ]]; then
             print_you_win
             exit
         fi
     else
         if [[ $BEAR_IN_CHEST -ne 0 ]]; then  
-            calculate_total
             print_bear_in_chest
             exit
         elif [[ $WRONG_WATERINGHOLE -ne 0 ]]; then
-            calculate_total
             print_wrong_wateringhole
             exit
         fi
     fi
 }
 
+# Set defaults
+score_only=
+possible_only=
+function parse_commandline {
+    while [[ $# -gt 0 ]]; do
+        _key="$1"
+        case "$_key" in
+            -q|--score)
+                score_only="on"
+                ;;
+            --possible)
+                possible_only="on"
+                ;;
+        esac
+        shift
+    done
+}
+
+parse_commandline "$@"
 load_all_scoring
 score_all
-print_score
+if [[ $score_only == "on" ]]; then
+    echo $(calculate_total)
+elif [[ $possible_only == "on" ]]; then
+    echo 
+else
+    print_score
+fi

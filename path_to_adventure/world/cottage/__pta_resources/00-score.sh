@@ -59,3 +59,13 @@ function score_cottage {
 }
 
 SCORING_FUNCTIONS+=(score_cottage)
+
+
+# PRINTING_FUNCTIONS: Print point summaries
+#  - This printing function happens before everything else
+function print_cottage {
+    [[ ${ITEMS[cottage_chest]} -ne 0 ]] && echo "Treasure chest created: ${ITEMS[cottage_chest]} Point"
+    [[ ${ITEMS[cottage_name]} -ne 0 ]] && echo "Name file created: ${ITEMS[cottage_name]} Point"
+    [[ ${ITEMS[cottage_chest]} -ne 0 && ${ITEMS[cottage_name]} -ne 0 ]] || echo "  COTTAGE: Unfinished"
+}
+PRINTING_FUNCTIONS[cottage]=print_cottage

@@ -68,4 +68,10 @@ function score_library {
         fi
     fi
 }
-SCORING_FUNCTIONS+=(score_cottage)
+SCORING_FUNCTIONS+=(score_library)
+
+
+# PRINTING_FUNCTIONS: Print point summaries 
+#   - just use the generic function
+PRINTING_FUNCTIONS[castle]=generic_print_function
+PRINTING_FUNCTIONS[library]=generic_print_function

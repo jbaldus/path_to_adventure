@@ -56,3 +56,12 @@ function score_glen {
 
 SCORING_FUNCTIONS+=(score_forest)
 SCORING_FUNCTIONS+=(score_glen)
+
+
+# PRINTING_FUNCTIONS: Print point summaries
+function print_forest {
+    [[ ${ITEMS[forest]} -ne 0 ]] && echo " FOREST Bonus!: ${ITEMS[forest]} Points"
+    [[ ${ITEMS[glen]} -ne 0 ]] && echo "HIDDEN GLEN: ${ITEMS[glen]} Points" || echo "...Hmmm...Did you search everywhere?"
+}
+PRINTING_FUNCTIONS[forest]=print_forest
+

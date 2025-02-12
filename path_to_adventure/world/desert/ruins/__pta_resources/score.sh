@@ -55,3 +55,9 @@ function score_ruins {
 }
 SCORING_FUNCTIONS+=(score_ruins)
 
+
+# PRINTING_FUNCTIONS: Print point summaries 
+#   - just use the generic function
+PRINTING_FUNCTIONS[ruins]=generic_print_function
+
+
