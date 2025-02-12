@@ -20,6 +20,7 @@ export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 
+
 source .lib/utils.sh
 source .lib/gather-resources.sh
 source .lib/setup-world.sh

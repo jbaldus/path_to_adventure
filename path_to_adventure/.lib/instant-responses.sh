@@ -29,6 +29,7 @@ precmd_functions+=(did-you-just-win)
 ##  If they return non-zero, the command won't execute,        ##
 ##  thanks to the "shopt -s extdebug" setting above            ##
 #################################################################
+
 touch-mirage () { :; }
 preexec_functions+=(touch-mirage)
 
@@ -39,3 +40,4 @@ preexec_functions+=(ruins-safety-check)
 ##  GATHER ALL THE PREEXEC SCRIPTS FROM __pta_resources DIRS   ##
 #################################################################
 __pta_load_all $PREEXEC_DIR
+

@@ -55,3 +55,10 @@ Then you can play it with
 ```bash
 podman run -it localhost/path_to_adventure
 ```
+
+## Licensing
+
+This project is primarily licensed under the GNU General Public License v3.0 (see COPYING file).
+
+However, the file `bash-preexec` is licensed under the MIT license (see LICENSE.MIT file). It is copyright (c) 2017 Ryan Caloras and contributors (see https://github.com/rcaloras/bash-preexec)
+
