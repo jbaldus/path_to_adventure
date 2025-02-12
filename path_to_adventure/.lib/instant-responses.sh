@@ -22,12 +22,6 @@ precmd_functions+=(auto_readme)
 did-you-just-win () { :; }
 precmd_functions+=(did-you-just-win)
 
-put-bear-in-chest () {
-    if [ -e "/World/cottage/treasure_chest/bear" ]; then
-        score
-    fi 
-}    
-precmd_functions+=(put-bear-in-chest)
 
 #################################################################
 ##  PREEXEC FUNCTIONS HAPPEN RIGHT BEFORE COMMAND IS EXECUTED  ##
@@ -35,19 +29,13 @@ precmd_functions+=(put-bear-in-chest)
 ##  If they return non-zero, the command won't execute,        ##
 ##  thanks to the "shopt -s extdebug" setting above            ##
 #################################################################
-touch-bear () {
-    if [[ "$@" == "touch bear" ]]; then
-      echo "Ouch"
-      return 1
-    else
-      return 0
-    fi
-}
-preexec_functions+=(touch-bear)
-
 touch-mirage () { :; }
 preexec_functions+=(touch-mirage)
 
 ruins-safety-check () { :; }
 preexec_functions+=(ruins-safety-check)
 
+#################################################################
+##  GATHER ALL THE PREEXEC SCRIPTS FROM __pta_resources DIRS   ##
+#################################################################
+__pta_load_all $PREEXEC_DIR

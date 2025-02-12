@@ -32,7 +32,7 @@ export PRINTING_FUNCTIONS
 GAME_OVER=0
 BEAR_IN_CHEST=0
 WRONG_WATERINGHOLE=0
-
+SCORE=0
 
 
 function load_all_scoring {
@@ -51,7 +51,7 @@ function print_bear_in_chest {
 
 \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/
 You've put a bear in your treasure chest!
-It eats all your points: -$TOTAL Points!
+It eats all your points: -$SCORE Points!
 And then it eats you!
 
                         ${BOLD}GAME OVER${RESET}
@@ -89,11 +89,11 @@ EOF
 }
 
 function calculate_total {
-    export TOTAL=0
+    SCORE=0
     for p in "${ITEMS[@]}"; do
-        TOTAL=$((TOTAL + p))
+        SCORE=$((SCORE + p))
     done
-    echo $TOTAL
+    echo $SCORE > $RESOURCES/current_score
 }
 
 
@@ -127,14 +127,14 @@ function print_score {
     done
      
     echo "==================="
-    echo "TOTAL SCORE: $TOTAL"
+    echo "TOTAL SCORE: $SCORE"
     echo ""
     handle_endgame
 }
 
 function handle_endgame {
     if [[ $GAME_OVER -eq 0 ]]; then
-        if [[ $TOTAL -ge 32 ]]; then
+        if [[ $SCORE -ge 32 ]]; then
             print_you_win
             exit
         fi
@@ -171,9 +171,9 @@ parse_commandline "$@"
 load_all_scoring
 score_all
 if [[ $score_only == "on" ]]; then
-    echo $(calculate_total)
+    echo -n $SCORE
 elif [[ $possible_only == "on" ]]; then
-    echo 
+    echo POSSIBLE
 else
     print_score
 fi
