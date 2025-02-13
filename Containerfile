@@ -27,8 +27,7 @@ WORKDIR /app
 COPY path_to_adventure/ .
 
 # Need to modify ownership and permissons for the game to work
-RUN sudo chown -R user:user /app;\
-    sudo chmod 055 /app/world/castle/library
+RUN sudo chown -R user:user /app;
 
 CMD ["/bin/bash", "--init-file", ".init.sh", "-i"]
 
