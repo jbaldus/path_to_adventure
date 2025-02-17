@@ -23,7 +23,7 @@ export HARDMODE=0
 #  player types their commands, replace the "\n" with "\[\e[600D\]".
 export PROMPT_SCORE='\[\e[600C\e[8D\]$(__pta_style-score)\n'
 export NORMALMODE_PROMPT=$PROMPT_SCORE'\[\e[01;32m\]\u\[\e[0m\]:\[\e[01;34m\]\w\[\e[0m\] \[\e[01;33m\]\$\[\e[0m\] '
-export HARDMODE_PROMPT='${RESET}[P2A] \[\e[01;33m\]\$\[\e[0m\] '
+export HARDMODE_PROMPT=$PROMPT_SCORE'${RESET}[P2A] \[\e[1;33m\]\$\[\e[0m\] '
 
 export PS1=$NORMALMODE_PROMPT
 

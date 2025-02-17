@@ -66,7 +66,7 @@ __pta_score-up() {
 # on the last command
 __pta_style-score() {
     if __pta_score-up; then
-        printf "${BOLD}${INVERT}Score: %2d${RESET}" $(score -q)
+        printf "${BOLD}${INVERT}Score: %2d\e[m" $(score -q)
     else
         printf "${RESET}Score: %2d" $(score -q)
     fi

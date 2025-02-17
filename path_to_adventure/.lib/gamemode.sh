@@ -18,7 +18,7 @@ function hardmode {
     export HARDMODE=1
     #Switch BOLD and RESET
     export BOLD=$'\e[0m'
-    export RESET=$'\e[1;31m'
+    export RESET=$'\e[0m\e[1;31m'
     cat << EOF
 ${RESET}
 =========================================================================
