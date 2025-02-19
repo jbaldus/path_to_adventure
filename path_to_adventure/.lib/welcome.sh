@@ -9,6 +9,17 @@
 ##                           WELCOME FUNCTIONS                               ##
 ##                                                                           ##
 ###############################################################################
+function slowcat {
+  local sleep_command="sleep[[:space:]]+[0-9]+\.?[0-9]*"
+  while IFS= read -r line; do
+    if [[ "$(__pta_trim_string "$line")" =~ $sleep_command ]]; then
+      eval "$line"
+    else
+      echo "$line"
+      sleep 1
+    fi
+  done
+}
 
 function welcome_message {
 cat << EOF
@@ -18,6 +29,10 @@ cat << EOF
 ##                                 ##
 #####################################
 
+EOF
+
+slowcat << EOF
+sleep 2
 You are a brave adventurer indeed to embark on this adventure exploring
 the world of Bash and the command line.  You will use all of the skills 
 you have learned to get around in the Linux terminal.  You will need to
@@ -28,26 +43,27 @@ EOF
 
 set_mode
 
-cat << EOF
+slowcat << EOF
 
 It's dangerous to go alone, so let me give you some important advice:
 
 > Nearly every place you go will have a README file. You should read it.
 
 > Remember that ${EMPHASIS}man${RESET} is a command that will show you how other commands 
-  work. Use it like ${EMPHASIS}man mv${RESET} to see what the ${BOLD}mv${RESET} command can do.
+  work. Use it like ${EMPHASIS}man mv${RESET} to see what the ${EMPHASIS}mv${RESET} command can do.
 
 EOF
 if [ $HARDMODE -eq 0 ]; then
-cat << EOF
+slowcat << EOF
 > If you really get stuck, you can type ${EMPHASIS}help${RESET} to get a list of only the 
-  commands that you will need for this adventure. Use ${BOEMPHASISD}man${RESET} for more info
+  commands that you will need for this adventure. Use ${EMPHASIS}man${RESET} for more info
+  sleep 8
   on each specific command.
 
 EOF
 fi
 
-cat << EOF
+slowcat << EOF
 > At any point you can type ${EMPHASIS}score${RESET} to get a rundown of your score. If you
   get 32 points, you win!
 

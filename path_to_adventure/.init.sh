@@ -11,9 +11,12 @@ export WORLD=/World
 export PATH=$DIR:$PATH
 
 export BOLD=$'\e[1;31m'
+export BOLD=$'\e[48:5:0m\e[38:5:9m'
 export EMPHASIS=$'\e[3;1;33m'
+export EMPHASIS=$'\e[48:5:0m\e[1;3;38:5:11m'
 export INVERT=$'\e[7m'
 export RESET=$'\e[0m'
+export RESET=$'\e[48:5:0m\e[0;38;2;255;255;255m'
 
 export HARDMODE=0
 
@@ -22,8 +25,8 @@ export HARDMODE=0
 # If we want the score to be on the right side of the SAME line as the 
 #  player types their commands, replace the "\n" with "\[\e[600D\]".
 export PROMPT_SCORE='\[\e[600C\e[8D\]$(__pta_style-score)\n'
-export NORMALMODE_PROMPT=$PROMPT_SCORE'\[\e[01;32m\]\u\[\e[0m\]:\[\e[01;34m\]\w\[\e[0m\] \[\e[01;33m\]\$\[\e[0m\] '
-export HARDMODE_PROMPT=$PROMPT_SCORE'${RESET}[P2A] \[\e[1;33m\]\$\[\e[0m\] '
+export NORMALMODE_PROMPT=$PROMPT_SCORE'\[\e[01;32m\]\u${RESET}:\[\e[01;34m\]\w${RESET} \[\e[01;33m\]\$${RESET} '
+export HARDMODE_PROMPT=$PROMPT_SCORE'${RESET}[P2A] \[\e[1;33m\]\$${RESET} '
 
 export PS1=$NORMALMODE_PROMPT
 
@@ -39,7 +42,7 @@ source .lib/instant-responses.sh
 ########################
 ##   START THE GAME   ##
 ########################
-
+printf "${RESET}"
 setup_all
 cd "$WORLD"
 welcome_message

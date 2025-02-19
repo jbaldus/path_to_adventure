@@ -43,7 +43,7 @@ function __pta_load_all { #directory
 
 # This function checks the score now and compares it to a previous score
 # It returns 0 if the score went up, and 1 if it didn't
-__pta_score-up() {
+function __pta_score-up {
     local prev_points
     local now_points
     if [[ ! -e $DIR/resources/prev_points ]]; then
@@ -64,11 +64,19 @@ __pta_score-up() {
 
 #This will print the score with a red background if it went up 
 # on the last command
-__pta_style-score() {
+function __pta_style-score {
     if __pta_score-up; then
         printf "${BOLD}${INVERT}Score: %2d\e[m" $(score -q)
     else
         printf "${RESET}Score: %2d" $(score -q)
     fi
+}
 
+function __pta_trim_string {
+    local var="$1"
+    # Remove leading whitespace
+    var="${var#"${var%%[![:space:]]*}"}"
+    # Remove trailing whitespace
+    var="${var%"${var##*[![:space:]]}"}"
+    echo "$var"
 }
