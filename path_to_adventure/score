@@ -29,7 +29,6 @@ export POSSIBLE_POINTS
 export SCORING_FUNCTIONS
 export PRINTING_FUNCTIONS
 
-GAME_OVER=0
 BEAR_IN_CHEST=0
 WRONG_WATERINGHOLE=0
 SCORE=0
@@ -61,20 +60,7 @@ Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}
 EOF
 }
 
-function print_wrong_wateringhole {
-    cat << EOF
-    
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You wasted precious time touching watering holes that
-only SEEMED to be there. You died of thirst, and the husk
-of your body was devoured by the desert.
 
-                        ${BOLD}GAME OVER${RESET}
-
-Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-EOF
-}
 
 function print_you_win {
     cat << EOF
@@ -133,7 +119,7 @@ function print_score {
 }
 
 function handle_endgame {
-    if [[ $GAME_OVER -eq 0 ]]; then
+    if __pta_is_game_over; then
         if [[ $SCORE -ge 32 ]]; then
             print_you_win
             exit
@@ -142,7 +128,7 @@ function handle_endgame {
         if [[ $BEAR_IN_CHEST -ne 0 ]]; then  
             print_bear_in_chest
             exit
-        elif [[ $WRONG_WATERINGHOLE -ne 0 ]]; then
+        elif [[ $RESOURCES/failed_wateringhole ]]; then
             print_wrong_wateringhole
             exit
         fi
@@ -174,6 +160,7 @@ if [[ $score_only == "on" ]]; then
     echo -n $SCORE
 elif [[ $possible_only == "on" ]]; then
     echo POSSIBLE
-else
+elif ! __pta_is_game_over; then
     print_score
 fi
+

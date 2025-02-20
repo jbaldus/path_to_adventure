@@ -36,6 +36,16 @@ preexec_functions+=(touch-mirage)
 ruins-safety-check () { :; }
 preexec_functions+=(ruins-safety-check)
 
+is-game-over () {
+    if __pta_is_game_over && [[ "$@" != "exit" ]]; then
+        echo "The Game is OVER. Type ${BOLD}exit${RESET} and press ${BOLD}[ENTER]${RESET}"
+        return 1
+    else
+        return 0
+    fi
+}
+preexec_functions+=(is-game-over)
+
 #################################################################
 ##  GATHER ALL THE PREEXEC SCRIPTS FROM __pta_resources DIRS   ##
 #################################################################
