@@ -70,5 +70,15 @@ __pta_style-score() {
     else
         printf "${RESET}Score: %2d" $(score -q)
     fi
+}
 
+function __pta_game_over {
+    touch $RESOURCES/game_over
+}
+
+function __pta_is_game_over {
+    if [[ -e "$RESOURCES/game_over" ]]; then
+        return 0
+    fi
+    return 1
 }

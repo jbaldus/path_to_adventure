@@ -46,7 +46,7 @@ ITEMS[desert]=0
 POSSIBLE_POINTS[desert]=4
 
 # SCORING_FUNCTIONS
-function score_desert {
+function check_wateringholes {
     # TODO: It would be great if there was a way to randomize what the
     #       right answer is to this.
     local wateringhole_dates=( "19 May 2001" 
@@ -59,25 +59,56 @@ function score_desert {
                                "11 Apr 2008" 
                                "03 Apr 2005" 
                                "27 Sep 1995" )
-    local failed=0
-    for i in {0..4} {6..9}; do
+    export failed_wateringhole=0
+    local success=0
+    local answer=5
+    for i in {0..9}; do
         local date=$(date -r $DESERT/wateringhole_$i "+%d %h %Y" 2>/dev/null)
+        if [[ $i -eq $answer ]]; then
+            if [[ "$date" == "$(date '+%d %h %Y')" ]]; then
+                success=1
+            fi
+            continue
+        fi
         if [[ "$date" != "${wateringhole_dates[$i]}" ]]; then
-          #Break the loop and set game over variable
-          WRONG_WATERINGHOLE=1
-          GAME_OVER=1
-          break
+            #Break the loop and set game over variable
+            export failed_wateringhole=1
+            touch $RESOURCES/failed_wateringhole
+            __pta_game_over
+            break
         fi
     done
-    if [[ $WRONG_WATERINGHOLE -eq 0 ]]; then
-        if [[ "$(date -r $DESERT/wateringhole_5 '+%d %h %Y' 2>/dev/null)" == "$(date '+%d %h %Y')" ]]; then
-            ITEMS[desert]=4
-        fi
-    fi    
+    # Get points if $success, but not $failed
+    if [[ $success -eq 1 && $failed_wateringhole -eq 0 ]]; then
+        return 0
+    fi
+    return 1
+}
+
+function score_desert {
+    if check_wateringholes; then
+        ITEMS[desert]=4
+    fi   
 }
 SCORING_FUNCTIONS+=(score_desert)
-
 
 # PRINTING_FUNCTIONS: Print point summaries 
 #   - just use the generic function
 PRINTING_FUNCTIONS[desert]=generic_print_function
+
+
+# GAME OVER Functions: PRINT MESSAGE AND GAME_OVER
+function print_wrong_wateringhole {
+    cat >&2 << EOF
+    
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You wasted precious time touching watering holes that
+only SEEMED to be there. You died of thirst, and the husk
+of your body was devoured by the desert.
+
+                        ${BOLD}GAME OVER${RESET}
+
+Type ${BOLD}exit${RESET} and press ${BOLD}[Enter]${RESET}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+EOF
+}
