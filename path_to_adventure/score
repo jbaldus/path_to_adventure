@@ -119,7 +119,7 @@ function print_score {
 }
 
 function handle_endgame {
-    if __pta_is_game_over; then
+    if ! __pta_is_game_over; then
         if [[ $SCORE -ge 32 ]]; then
             print_you_win
             exit
@@ -128,7 +128,7 @@ function handle_endgame {
         if [[ $BEAR_IN_CHEST -ne 0 ]]; then  
             print_bear_in_chest
             exit
-        elif [[ $RESOURCES/failed_wateringhole ]]; then
+        elif [[ -e $RESOURCES/failed_wateringhole ]]; then
             print_wrong_wateringhole
             exit
         fi
