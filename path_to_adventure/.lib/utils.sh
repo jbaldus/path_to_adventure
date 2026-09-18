@@ -7,9 +7,12 @@ __pta_utils_imported="defined"
 
 # Some utility functions
 
-function dbg {
-    echo $@ >/dev/null
-}
+# Set PTA_DEBUG_OUTPUT once, during load
+if [[ "x${PTA_DEBUG}" == "x" ]]; then
+    PTA_DEBUG_OUTPUT=/dev/null
+else
+    PTA_DEBUG_OUTPUT=${PTA_DEBUG_OUTPUT:-$DIR/debug.log}
+fi
 
 function __pta_reverse-filepath {
     if [[ $# -ne 1 ]]; then
