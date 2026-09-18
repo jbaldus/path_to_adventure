@@ -34,10 +34,6 @@ WRONG_WATERINGHOLE=0
 SCORE=0
 
 
-function load_all_scoring {
-    __pta_load_all "$SCORE_DIR"
-}
-
 function score_all {
     for scoring_function in "${SCORING_FUNCTIONS[@]}"; do
         "$scoring_function"
@@ -154,7 +150,7 @@ function parse_commandline {
 }
 
 parse_commandline "$@"
-load_all_scoring
+__pta_load_phase score
 score_all
 if [[ $score_only == "on" ]]; then
     echo -n $SCORE

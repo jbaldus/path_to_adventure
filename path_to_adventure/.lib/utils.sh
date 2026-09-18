@@ -14,33 +14,20 @@ else
     PTA_DEBUG_OUTPUT=${PTA_DEBUG_OUTPUT:-$DIR/debug.log}
 fi
 
-function __pta_reverse-filepath {
-    if [[ $# -ne 1 ]]; then
-        return
-    fi
-    local FILEPATH="$1"
-    local -a CHUNKS
-    while [[ "$FILEPATH" != "/" 
-          && "$FILEPATH" != "."
-          && "$(basename $FILEPATH)" != "World" ]]; do
-        CHUNKS+=("$(basename $FILEPATH)")
-        FILEPATH="$(dirname $FILEPATH)"
-    done
-    local REVERSED="${CHUNKS[*]}"
-    echo ${REVERSED// /-}
+function dbg {
+    echo $@ >>$PTA_DEBUG_OUTPUT
 }
 
 
-# This function will source all the files in a directory
-function __pta_load_all { #directory
-    local script_dir="$1"
+# Load each phase's scripts
+function __pta_load_phase { # phase: score|setup|preexec
+    local phase="$1"
     local script
-    for script in "$script_dir"/*; do
-        if [[ -e "$script" ]]; then 
-            source "$script"
-        fi
+    dbg "Loading scripts for phase: ${phase}"
+    for script in $(find -H "$RESOURCES" -name "*${phase}.sh" -printf '%f\t%p\n' | sort | cut -f2-); do
+        source "$script"
+        dbg "Script ${script} loaded"
     done
-
 }
 
 
@@ -49,21 +36,20 @@ function __pta_load_all { #directory
 __pta_score-up() {
     local prev_points
     local now_points
-    if [[ ! -e $DIR/resources/prev_points ]]; then
-        echo 0 > $DIR/resources/prev_points
+    if [[ ! -e $RESOURCES/prev_points ]]; then
+        echo 0 > $RESOURCES/prev_points
         prev_points=0
     else
-        prev_points=$(cat $DIR/resources/prev_points)
+        prev_points=$(cat $RESOURCES/prev_points)
     fi
     now_points=$(score -q)
     if [[ $now_points -gt $prev_points ]] ; then
-        echo $now_points > $DIR/resources/prev_points
+        echo $now_points > $RESOURCES/prev_points
         return 0
     else
         return 1
     fi
 }
-
 
 #This will print the score with a red background if it went up 
 # on the last command
