@@ -8,7 +8,7 @@
 ##  completed.
 ############################################################
 function wrong-wateringhole {
-    if [[ "$PWD" == "/World/desert" ]]; then
+    if [[ "$PWD" == "$WORLD/desert" ]]; then
         check_wateringholes
     fi
     if [[ -e $RESOURCES/failed_wateringhole ]]; then

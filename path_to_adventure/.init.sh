@@ -5,9 +5,9 @@ source ~/.bashrc
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Add a link to the root directory to make it easier to find.
-sudo ln -sf $DIR/world /World
-export WORLD=/World
-export RESOURCES="$DIR/resources"
+export WORLD=${WORLD:-/World}
+sudo ln -sf $DIR/world $WORLD
+export RESOURCES="${RESOURCES:-$DIR/resources}"
 mkdir -p "$RESOURCES"
 
 export PATH=$DIR:$PATH
@@ -43,7 +43,6 @@ source .lib/instant-responses.sh
 ########################
 
 __pta_extract_resources
-# setup_all
 __pta_load_phase setup 
 __pta_load_phase preexec
 cd "$WORLD"
