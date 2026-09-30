@@ -16,7 +16,7 @@ source .lib/utils.sh
 function __pta_extract_resources {
     shopt -s dotglob
     local RESOURCE_DIR
-    for RESOURCE_DIR in $(sudo find -H $WORLD -type d -name __pta_resources 2>/dev/null); do
+    for RESOURCE_DIR in $(find -H $WORLD -type d -name __pta_resources 2>/dev/null); do
         local DEST_DIR="${RESOURCES}$(dirname "$RESOURCE_DIR")"
         dbg "$RESOURCE_DIR will be moved to $DEST_DIR"
         mkdir -p "$(dirname "$DEST_DIR")"
