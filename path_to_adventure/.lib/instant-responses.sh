@@ -46,8 +46,4 @@ is-game-over () {
 }
 preexec_functions+=(is-game-over)
 
-#################################################################
-##  GATHER ALL THE PREEXEC SCRIPTS FROM __pta_resources DIRS   ##
-#################################################################
-__pta_load_phase preexec
 

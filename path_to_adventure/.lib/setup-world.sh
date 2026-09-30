@@ -5,10 +5,7 @@
 ##                           SETUP FUNCTIONS                                 ##
 ##                                                                           ##
 ###############################################################################
-function setup_all {
-    __pta_load_all "$SETUP_DIR"
-}
-
+## These have been moved into the rooms themselves
 
 ###############################################################################
 ##                                                                           ##
