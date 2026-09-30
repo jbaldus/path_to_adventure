@@ -5,6 +5,10 @@ shopt -s extdebug
 
 ##########################################################
 ##  PRECMD FUNCTIONS HAPPEN BEFORE THE PROMPT IS SHOWN  ##
+##  --------------------------------------------------  ##
+##  Think of these as running right AFTER the command   ##
+##  so this is the place to put anything that should    ##
+##  react to the consequences of the command            ##
 ##########################################################
 
 function auto_readme {
