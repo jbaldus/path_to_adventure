@@ -8,9 +8,7 @@ function dbg {
 BOLD=$'\e[1;31m'
 RESET=$'\e[0m'
 
-export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source $DIR/.lib/utils.sh
-export WORLD=$DIR/world
 export CHEST=$WORLD/cottage/
 CAVE=$FOREST/cave
 DESERT=$WORLD/desert
