@@ -15,16 +15,16 @@ source .lib/utils.sh
 
 function __pta_extract_resources {
     shopt -s dotglob
-    local RESOURCE_DIR
-    for RESOURCE_DIR in $(find -H $WORLD -type d -name __pta_resources 2>/dev/null); do
-        local DEST_DIR="${RESOURCES}$(dirname "$RESOURCE_DIR")"
-        dbg "$RESOURCE_DIR will be moved to $DEST_DIR"
-        mkdir -p "$(dirname "$DEST_DIR")"
-        if [[ -d "$DEST_DIR" ]]; then
-            mv "$RESOURCE_DIR"/* "$DEST_DIR/"
-            rmdir "$RESOURCE_DIR"
+    local resource_dir
+    for resource_dir in $(find -H $WORLD -type d -name __pta_resources 2>/dev/null); do
+        local dest_dir="${RESOURCES}$(dirname "$resource_dir")"
+        dbg "$resource_dir will be moved to $dest_dir"
+        mkdir -p "$(dirname "$dest_dir")"
+        if [[ -d "$dest_dir" ]]; then
+            mv "$resource_dir"/* "$dest_dir/"
+            rmdir "$resource_dir"
         else
-            mv "$RESOURCE_DIR" "$DEST_DIR"
+            mv "$resource_dir" "$dest_dir"
         fi
     done
     shopt -u dotglob

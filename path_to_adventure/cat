@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Do some very simple markdown-esque formatting and print
+# one line at a time with a little delay. This is useful in
+# my path_to_adventure games.
+#
+# Formatting:
+# **BOLD**
+# `CODE`
+# *EMPHASIS*
+# Regular text is reset with $RESET
+
+
+fast=0
+[[ "$(basename $0)" == "tinymd" ]] && fast=1
+pause_time=${pause_time:-0.2}
+
+
+export BOLD=${BOLD:-$'\e[1;31m'}
+export EMPHASIS=${EMPHASIS:-$'\e[3;33m'}
+export CODE=${CODE:-$'\e[0;32m'}
+export RESET=${RESET:-$'\e[0m'}
+
+
+# Reset terminal if we CTRL-C early
+trap 'printf "%s" "$RESET"' EXIT
+
+
+# Move input to fd3 so we can hit a key to go faster
+printf '%s' "$RESET"
+while IFS= read -r ln <&3; do
+  printf '%s\n' "$ln"
+  if (( ! fast )); then
+      if IFS= read -rsn1 -t ${pause_time} key < /dev/tty; then
+          if [[ -z $key ]]; then
+              fast=1
+          fi
+      fi
+  fi
+done 3< <(femtomd --color=always "$@")

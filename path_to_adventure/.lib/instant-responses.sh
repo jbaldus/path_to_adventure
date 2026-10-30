@@ -16,7 +16,7 @@ function auto_readme {
         LAST_COMMAND=$(HISTTIMEFORMAT= history 1 | sed -E "s/[ ]*[0-9]+[ ]*([^ ]+).*/\1/")
         if [[ "$LAST_COMMAND" == "cd" ]] 2>/dev/null; then
             if [[ -e ./README ]]; then
-                cat ./README
+                realcat ./README
             fi
         fi
     fi

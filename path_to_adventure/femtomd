@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long;
+
+# --color=auto (default): color only when stdout is a terminal
+# --color=always / never: force it either way
+my $color = 'auto';
+GetOptions('color=s' => \$color)
+    or die "Usage: femtomd [--color=auto|always|never] [file...]\n";
+$color =~ /^(?:auto|always|never)$/
+    or die "femtomd: --color must be auto, always, or never\n";
+
+my $use_color = $color eq 'always' ? 1
+              : $color eq 'never'  ? 0
+              : (-t STDOUT && !defined $ENV{NO_COLOR});
+
+
+# Defaults, overridable from the environment
+my $BOLD     = $ENV{BOLD}     // "\e[1;31m";
+my $EMPHASIS = $ENV{EMPHASIS} // "\e[3;33m";
+my $CODE     = $ENV{CODE}     // "\e[0;32m";
+my $RESET    = $ENV{RESET}    // "\e[0m";
+
+$| = 1;                         # don't buffer output when piped
+print $RESET if $use_color;     # reset terminal state at the start
+
+while (my $line = <>) {
+    if ($use_color) {
+        $line =~ s/\*\*(?=\S)(.+?)(?<=\S)\*\*/${BOLD}$1${RESET}/g;
+        $line =~ s/\*(?=\S)(.+?)(?<=\S)\*/${EMPHASIS}$1${RESET}/g;
+        $line =~ s/`(?=\S)(.+?)(?<=\S)`/${CODE}$1${RESET}/g;
+    }
+    print $line;
+}
+
+print $RESET if $use_color;     # make sure an unclosed span can't leak

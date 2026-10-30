@@ -36,12 +36,7 @@ function __pta_load_phase { # phase: score|setup|preexec
 __pta_score-up() {
     local prev_points
     local now_points
-    if [[ ! -e $RESOURCES/prev_points ]]; then
-        echo 0 > $RESOURCES/prev_points
-        prev_points=0
-    else
-        prev_points=$(cat $RESOURCES/prev_points)
-    fi
+    prev_points=$(__pta_prev_points)
     now_points=$(score -q)
     if [[ $now_points -gt $prev_points ]] ; then
         echo $now_points > $RESOURCES/prev_points
@@ -49,6 +44,18 @@ __pta_score-up() {
     else
         return 1
     fi
+}
+
+# Gets the previous score, and sets if there wasn't one
+__pta_prev_points() {
+    local prev_points
+    if [[ ! -e "$RESOURCES/prev_points" ]]; then
+        echo 0 > "$RESOURCES/prev_points"
+        prev_points=0
+    else
+        prev_points=$(realcat "$RESOURCES/prev_points")
+    fi
+    echo $prev_points
 }
 
 #This will print the score with a red background if it went up 

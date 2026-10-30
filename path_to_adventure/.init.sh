@@ -5,12 +5,13 @@ source ~/.bashrc
 export DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Add a link to the root directory to make it easier to find.
-export WORLD=${WORLD:-/World}
-sudo ln -sf $DIR/world $WORLD
+export WORLD="${WORLD:-/World}"
+sudo ln -sf "$DIR/world" "$WORLD"
 export RESOURCES="${RESOURCES:-$DIR/resources}"
 mkdir -p "$RESOURCES"
 
-export PATH=$DIR:$PATH
+# Our `cat` is not the `realcat`
+ln -s "$(command -v cat)" "$DIR/realcat"
 
 export BOLD=$'\e[1;31m'
 export EMPHASIS=$'\e[3;1;33m'
@@ -25,8 +26,6 @@ export HARDMODE=0
 #  player types their commands, replace the "\n" with "\[\e[600D\]".
 export PROMPT_SCORE='\[\e[600C\e[8D\]$(__pta_style-score)\n'
 export NORMALMODE_PROMPT=$PROMPT_SCORE'\[\e[01;32m\]\u\[\e[0m\]:\[\e[01;34m\]\w\[\e[0m\] \[\e[01;33m\]\$\[\e[0m\] '
-export HARDMODE_PROMPT=$PROMPT_SCORE'${RESET}[P2A] \[\e[1;33m\]\$\[\e[0m\] '
-
 export PS1=$NORMALMODE_PROMPT
 
 
@@ -37,6 +36,10 @@ source .lib/help.sh
 source .lib/gamemode.sh
 source .lib/welcome.sh
 source .lib/instant-responses.sh
+
+# This makes sure we use our custom `cat` and `score`
+# Don't move it before the importing of scripts
+export PATH="$DIR:$PATH"
 
 ########################
 ##   START THE GAME   ##
